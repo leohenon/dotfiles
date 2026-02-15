@@ -1,0 +1,8 @@
+.DS_Store
+*.swp
+*.swo
+
+.config/fish/local.fish
+.config/zsh/local.zsh
+.config/tmux/local.conf
+.config/nvim/lua/config/local.lua

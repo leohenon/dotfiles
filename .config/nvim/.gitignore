@@ -1,0 +1,6 @@
+.cache/
+.data/
+.state/
+*.log
+.nvimlog
+.DS_Store

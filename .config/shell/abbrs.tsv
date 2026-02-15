@@ -1,0 +1,71 @@
+gs	git status
+ga	git add
+gaa	git add --all
+gb	git branch
+gba	git branch -a
+gbd	git branch -d
+gcl	git clone
+gc	git commit
+gcm	git commit -m
+gca	git commit --amend
+gco	git checkout
+gcb	git checkout -b
+gl	git log --oneline --graph --decorate
+gp	git push
+gpsu	git push --set-upstream origin main
+gpf	git push --force-with-lease
+gpl	git pull --rebase
+gd	git diff
+gds	git diff --staged
+gst	git stash
+gsp	git stash push --staged
+gsa	git stash apply
+gsd	git stash drop
+ghssh	ssh -T git@github.com
+ghpub	gh repo create --public --source=. --remote=origin --push
+ghpriv	gh repo create --private --source=. --remote=origin --push
+dps	docker ps
+dpa	docker ps -a
+di	docker images
+drm	docker rm
+drmi	docker rmi
+dex	docker exec -it
+dlog	docker logs -f
+dc	docker compose
+dcu	docker compose up
+dcud	docker compose up -d
+dcd	docker compose down
+dcb	docker compose build
+dcr	docker compose restart
+dcm	docker compose -f docker-compose.monitoring.yml
+dcp	docker compose -f docker-compose.prod.yml
+dcpn	docker compose exec payload pnpm run
+ll	ls -lah
+la	ls -A
+..	cd ..
+...	cd ../..
+....	cd ../../..
+c	clear
+md	mkdir -p
+rd	rmdir
+ff	fzf
+f	find . -name
+rg	rg --hidden
+grep	grep --color=auto
+h	history
+psg	ps aux | grep -v grep | grep
+ports	lsof -i -P -n
+kill9	kill -9
+myip	curl ifconfig.me
+v	nvim
+vi	nvim
+py	python3
+pip	pip3
+serve	python3 -m http.server
+t	tmux
+tsc	tmux switch-client -t
+ta	tmux attach -t
+tn	tmux new -s
+tk	tmux kill-session -t
+tl	tmux ls
+tlp	tmux list-sessions -F "Session: #S | Root: #{session_path}"

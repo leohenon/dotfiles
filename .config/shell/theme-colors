@@ -1,0 +1,6 @@
+export LH_THEME_NAME="vesper"
+export LH_COLOR_FG="#FEFEFE"
+export LH_COLOR_MUTED="#A0A0A0"
+export LH_COLOR_MINT="#99FFE4"
+export LH_COLOR_ORANGE="#FFCFA8"
+export LH_COLOR_RED="#FF8080"

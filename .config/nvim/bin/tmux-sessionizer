@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOTS=(
+	"$HOME"
+)
+
+if ! command -v tmux >/dev/null 2>&1; then
+	echo "tmux is required"
+	exit 1
+fi
+
+list_projects() {
+	for root in "${ROOTS[@]}"; do
+		if [ -d "$root" ]; then
+			find "$root" -mindepth 1 -maxdepth 3 -type d 2>/dev/null || true
+		fi
+	done
+}
+
+if [ "${1-}" != "" ]; then
+	selected="$1"
+else
+	if ! command -v fzf >/dev/null 2>&1; then
+		echo "fzf is required when no path is provided"
+		exit 1
+	fi
+
+	selected="$(list_projects | sort -u | fzf --prompt='session > ' --tmux=center,100%,100% --layout=default)"
+fi
+
+if [ -z "${selected:-}" ]; then
+	exit 0
+fi
+
+if [ ! -d "$selected" ]; then
+	echo "directory not found: $selected"
+	exit 1
+fi
+
+selected="$(cd "$selected" && pwd)"
+
+session_name="${selected#$HOME/}"
+session_name="${session_name//\//_}"
+session_name="${session_name//./_}"
+session_name="${session_name// /_}"
+
+if [ -z "$session_name" ] || [ "$session_name" = "$selected" ]; then
+	session_name="main"
+fi
+
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+	tmux new-session -ds "$session_name" -n nvim -c "$selected"
+fi
+
+if [ -n "${TMUX:-}" ]; then
+	tmux switch-client -t "$session_name"
+else
+	tmux attach-session -t "$session_name"
+fi

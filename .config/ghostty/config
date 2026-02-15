@@ -1,0 +1,17 @@
+window-decoration = none
+window-padding-x = 0
+window-padding-y = 0,0
+window-padding-balance = true
+window-padding-color = background
+font-family = "JetBrainsMono Nerd Font Mono"
+font-size = 14
+adjust-cell-height = 0
+font-thicken = false
+
+selection-foreground = #101010
+selection-background = #FFCFA8
+
+theme = "vesper"
+
+keybind = ctrl+cmd+left_bracket=resize_split:left,25
+keybind = ctrl+cmd+right_bracket=resize_split:right,25
