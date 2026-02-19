@@ -240,11 +240,27 @@ map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git history: 
 map("n", "<leader>ns", function()
   require("neogit").open({ kind = "vsplit" })
 end, { desc = "Neogit in vertical split" })
+
+map({ "n", "x" }, "y", '""y', { desc = "Yank to vim register" })
+map("n", "yy", '""yy', { desc = "Yank line to vim register" })
+map("n", "p", '""p', { desc = "Paste from vim register" })
+map("x", "p", '"_d""P', { desc = "Paste from vim register (selection discarded)" })
+map("n", "P", '""P', { desc = "Paste above from vim register" })
+
 map({ "n", "x" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 map("n", "<leader>yy", '"+yy', { desc = "Yank line to system clipboard" })
-map("n", "<leader>P", '"+p', { desc = "Paste from system clipboard" })
+map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
+map("x", "<leader>p", '"_d"+P', { desc = "Paste from system clipboard (selection discarded)" })
+map("n", "<leader>P", '"+P', { desc = "Paste above from system clipboard" })
+
+map({ "n", "x" }, "d", '""d', { desc = "Delete to vim register" })
+map("n", "dd", '""dd', { desc = "Delete line to vim register" })
+
+map("x", "<leader>rp", '""p', { desc = "Paste from vim register (selection to register)" })
+
+map("n", "x", '"_x', { desc = "Delete char to void register" })
+map("n", "X", '"_X', { desc = "Delete char before cursor to void register" })
 map({ "n", "x" }, "<leader>x", '"_d', { desc = "Delete to void register" })
+map("n", "<leader>xx", '"_dd', { desc = "Delete line to void register" })
 map("n", "<leader>rw", replace_word_under_cursor, { desc = "Find/replace current word" })
 map("n", "<C-f>", open_tmux_sessionizer, { desc = "Open tmux sessionizer" })
-
-map("x", "<leader>p;", '"_dP', { desc = "Paste over selection without yanking" })
