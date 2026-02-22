@@ -47,6 +47,8 @@ return {
         telescope_find_files_startup,
         { desc = "Telescope find files" }
       )
+      vim.keymap.set("n", "<leader>fs", builtin.git_status, { desc = "Telescope git status" })
+      vim.keymap.set("n", "<leader>ft", builtin.git_files, { desc = "Telescope git files" })
       vim.keymap.set(
         "n",
         "<leader>fg",
