@@ -18,6 +18,40 @@ return {
               treesitter = { enable = false },
             },
           },
+          pickers = {
+            find_files = {
+              theme = "dropdown",
+              previewer = false,
+              layout_config = { width = 0.60, height = 0.55 },
+            },
+            git_files = {
+              theme = "dropdown",
+              previewer = false,
+              layout_config = { width = 0.60, height = 0.55 },
+            },
+            git_status = {
+              layout_strategy = "horizontal",
+              layout_config = { width = 0.85, height = 0.70, preview_width = 0.55 },
+            },
+            live_grep = {
+              theme = "ivy",
+              layout_config = { height = 0.35 },
+            },
+            buffers = {
+              theme = "dropdown",
+              previewer = false,
+              layout_config = { width = 0.55, height = 0.45 },
+            },
+            help_tags = {
+              theme = "dropdown",
+              previewer = false,
+              layout_config = { width = 0.60, height = 0.50 },
+            },
+            git_bcommits = {
+              layout_strategy = "horizontal",
+              layout_config = { width = 0.80, height = 0.70, preview_width = 0.60 },
+            },
+          },
         })
       end)
       pcall(function()
@@ -54,6 +88,7 @@ return {
         telescope_live_grep_startup,
         { desc = "Telescope live grep" }
       )
+      vim.keymap.set("n", "<leader>fG", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffer grep" })
       vim.keymap.set("n", "<leader>rr", builtin.lsp_references, { desc = "Telescope references" })
       vim.keymap.set("n", "<leader>rd", builtin.lsp_definitions, { desc = "Telescope definitions" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
