@@ -149,15 +149,6 @@ local function toggle_markdown_checkbox()
   vim.api.nvim_set_current_line(line)
 end
 
-local function open_tmux_sessionizer()
-  if vim.env.TMUX == nil or vim.env.TMUX == "" then
-    vim.notify("Not inside tmux", vim.log.levels.WARN)
-    return
-  end
-
-  vim.fn.system({ "tmux", "new-window", vim.fn.expand("~/.config/nvim/bin/tmux-sessionizer") })
-end
-
 local function replace_word_under_cursor()
   local word = vim.fn.expand("<cword>")
   if word == nil or word == "" then
@@ -263,4 +254,3 @@ map("n", "X", '"_X', { desc = "Delete char before cursor to void register" })
 map({ "n", "x" }, "<leader>x", '"_d', { desc = "Delete to void register" })
 map("n", "<leader>xx", '"_dd', { desc = "Delete line to void register" })
 map("n", "<leader>rw", replace_word_under_cursor, { desc = "Find/replace current word" })
-map("n", "<C-f>", open_tmux_sessionizer, { desc = "Open tmux sessionizer" })

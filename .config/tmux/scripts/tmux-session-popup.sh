@@ -20,17 +20,23 @@ fi
 
 selected="$(cd "$selected" && pwd)"
 
-session_name="$(basename "$selected")"
-session_name="${session_name//./_}"
-session_name="${session_name// /_}"
-session_name="${session_name//-/_}"
+base_name="${selected#$HOME/}"
+base_name="${base_name//\//_}"
+base_name="${base_name//./_}"
+base_name="${base_name// /_}"
+base_name="${base_name//-/_}"
 
-if [ -z "$session_name" ]; then
-	session_name="main"
+if [ -z "$base_name" ] || [ "$base_name" = "$selected" ]; then
+	base_name="main"
 fi
 
-if ! tmux has-session -t="$session_name" 2>/dev/null; then
-	tmux new-session -ds "$session_name" -n nvim -c "$selected"
-fi
+session_name="$base_name"
+suffix=2
+while tmux has-session -t="$session_name" 2>/dev/null; do
+	session_name="${base_name}_${suffix}"
+	suffix=$((suffix + 1))
+done
+
+tmux new-session -ds "$session_name" -n nvim -c "$selected"
 
 tmux switch-client -t "$session_name"
