@@ -161,8 +161,7 @@ return {
     "akinsho/toggleterm.nvim",
     version = "*",
     keys = {
-      { "<leader>ts", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Terminal (small split)" },
-      { "<leader>tH", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Terminal (split)" },
+      { "<leader>-", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Terminal (split)" },
     },
     opts = {
       start_in_insert = true,
