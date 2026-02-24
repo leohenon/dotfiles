@@ -12,7 +12,7 @@ if ! command -v fzf >/dev/null 2>&1; then
 	exit 1
 fi
 
-selected="$({ find "$HOME" -mindepth 1 -maxdepth 3 -type d 2>/dev/null || true; } | sort -u | fzf --prompt='dirs> ' --height=100% --layout=default)"
+selected="$({ find "$HOME" -mindepth 1 -maxdepth 3 -type d 2>/dev/null || true; } | sort -u | fzf --prompt='dir> ' --height=100% --layout=default --no-scrollbar)"
 
 if [ -z "${selected:-}" ]; then
 	exit 0
