@@ -188,7 +188,6 @@ return {
     },
     config = function(_, opts)
       require("toggleterm").setup(opts)
-      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Terminal: Normal mode" })
       vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], { desc = "Terminal: Window command" })
     end,
   },
@@ -198,6 +197,7 @@ return {
     ft = { "markdown" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
+      enabled = false,
       anti_conceal = { enabled = false },
       file_types = { "markdown" },
     },

@@ -14,6 +14,7 @@ vim.opt.tabline = "%!v:lua.require'config.tabline'.render()"
 vim.opt.fillchars:append({ diff = " " })
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.wrap = false
 
 local function ruler_state_path()
   return vim.fn.stdpath("state") .. "/ruler_state.json"
@@ -45,11 +46,21 @@ local function apply_ruler_state()
 end
 
 vim.g.ruler_visible = read_ruler_state()
-apply_ruler_state()
 
 vim.api.nvim_create_user_command("ToggleRuler", function()
   vim.g.ruler_visible = not vim.g.ruler_visible
-  apply_ruler_state()
+  
+  for _, winid in ipairs(vim.api.nvim_list_wins()) do
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    local should_apply = (
+      vim.bo[bufnr].modifiable and
+      vim.bo[bufnr].buftype == ""
+    )
+    if should_apply then
+      vim.wo[winid].colorcolumn = vim.g.ruler_visible and "120" or ""
+    end
+  end
+  
   write_ruler_state(vim.g.ruler_visible)
   pcall(function()
     require("lualine").refresh({ place = { "statusline" } })
@@ -61,6 +72,42 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
   group = ruler_group,
   callback = function()
     write_ruler_state(vim.g.ruler_visible)
+  end,
+})
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = ruler_group,
+  once = true,
+  callback = function()
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+      local bufnr = vim.api.nvim_win_get_buf(winid)
+      if not vim.bo[bufnr].modifiable or vim.bo[bufnr].buftype ~= "" then
+        vim.wo[winid].colorcolumn = ""
+      else
+        vim.wo[winid].colorcolumn = vim.g.ruler_visible and "120" or ""
+      end
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+  group = ruler_group,
+  callback = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local winid = vim.api.nvim_get_current_win()
+    
+    if not vim.bo[bufnr].modifiable or vim.bo[bufnr].buftype ~= "" then
+      vim.wo[winid].colorcolumn = ""
+    else
+      vim.wo[winid].colorcolumn = vim.g.ruler_visible and "120" or ""
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+  group = ruler_group,
+  callback = function()
+    vim.wo.colorcolumn = ""
   end,
 })
 
