@@ -73,9 +73,9 @@ fi
 
 if [ "$cache_is_fresh" = true ]; then
 	refresh_cache_async
-	selected_file=$(fzf --prompt='file> ' --height=100% --layout=default --border <"$cache_file")
+	selected_file=$(fzf --prompt='file> ' --height=100% --layout=default --border --no-scrollbar <"$cache_file")
 else
-	selected_file=$(generate_file_list | tee "$cache_file" | fzf --prompt='file> ' --height=100% --layout=default --border)
+	selected_file=$(generate_file_list | tee "$cache_file" | fzf --prompt='file> ' --height=100% --layout=default --border --no-scrollbar)
 fi
 
 [ -z "${selected_file:-}" ] && exit 0
