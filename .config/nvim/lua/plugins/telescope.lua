@@ -12,7 +12,7 @@ return {
       pcall(function()
         require("telescope").setup({
           defaults = {
-            sorting_strategy = "ascending",
+            sorting_strategy = "descending",
             layout_config = { prompt_position = "top" },
             preview = {
               treesitter = { enable = false },
@@ -33,8 +33,25 @@ return {
               layout_strategy = "horizontal",
               layout_config = { width = 0.85, height = 0.70, preview_width = 0.55 },
             },
+            git_branches = {
+              layout_config = { prompt_position = "bottom" },
+            },
+            git_commits = {
+              layout_config = { prompt_position = "bottom" },
+            },
             live_grep = {
               theme = "ivy",
+              sorting_strategy = "ascending",
+              layout_config = { height = 0.35 },
+            },
+            grep_string = {
+              theme = "ivy",
+              sorting_strategy = "ascending",
+              layout_config = { height = 0.35 },
+            },
+            lsp_references = {
+              theme = "ivy",
+              sorting_strategy = "ascending",
               layout_config = { height = 0.35 },
             },
             buffers = {
@@ -49,7 +66,7 @@ return {
             },
             git_bcommits = {
               layout_strategy = "horizontal",
-              layout_config = { width = 0.80, height = 0.70, preview_width = 0.60 },
+              layout_config = { prompt_position = "bottom", width = 0.80, height = 0.70, preview_width = 0.60 },
             },
           },
         })
@@ -89,13 +106,14 @@ return {
         { desc = "Telescope live grep" }
       )
       vim.keymap.set("n", "<leader>fG", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffer grep" })
+      vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Telescope find word under cursor" })
       vim.keymap.set("n", "<leader>rr", builtin.lsp_references, { desc = "Telescope references" })
       vim.keymap.set("n", "<leader>rd", builtin.lsp_definitions, { desc = "Telescope definitions" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
       vim.keymap.set("n", "<leader>gb", builtin.git_branches, { desc = "Git: branches (fzf)" })
       vim.keymap.set("n", "<leader>gB", function()
-        builtin.git_branches({ pattern = "refs/remotes/*" })
+        builtin.git_branches({ pattern = "refs/remotes" })
       end, { desc = "Git: remote branches (fzf)" })
       vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Git: commits (repo)" })
       vim.keymap.set("n", "<leader>gC", builtin.git_bcommits, { desc = "Git: commits (buffer)" })
