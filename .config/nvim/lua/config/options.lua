@@ -9,7 +9,6 @@ vim.opt.laststatus = 3
 vim.opt.signcolumn = "yes"
 vim.opt.clipboard = ""
 vim.opt.scrolloff = 20
-vim.opt.winbar = "%{%v:lua.require'config.winbar'.navic()%}"
 vim.opt.tabline = "%!v:lua.require'config.tabline'.render()"
 vim.opt.fillchars:append({ diff = " " })
 vim.opt.splitright = true

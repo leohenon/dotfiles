@@ -1,19 +1,5 @@
 return {
   {
-    "SmiteshP/nvim-navic",
-    event = "LspAttach",
-    opts = {
-      highlight = true,
-      separator = " > ",
-      depth_limit = 0,
-      depth_limit_indicator = "..",
-      lazy_update_context = true,
-    },
-    config = function(_, opts)
-      require("nvim-navic").setup(opts)
-    end,
-  },
-  {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
     config = function()
@@ -102,16 +88,6 @@ return {
           map("n", "<leader>rD", function()
             vim.lsp.buf.definition({ on_list = to_quickfix("LSP Definitions") })
           end, "LSP: Definitions -> quickfix")
-
-          pcall(function()
-            if
-              client
-              and client.server_capabilities
-              and client.server_capabilities.documentSymbolProvider
-            then
-              require("nvim-navic").attach(client, bufnr)
-            end
-          end)
 
           local group = vim.api.nvim_create_augroup("lsp_cursorhold_diagnostics", { clear = false })
           vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
