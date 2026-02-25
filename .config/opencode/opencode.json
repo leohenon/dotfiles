@@ -351,29 +351,37 @@
             "context": 256000,
             "output": 65536
           }
+        },
+        "qwen3:14b": {
+          "id": "qwen3:14b",
+          "name": "Qwen3 14B (Local)",
+          "limit": {
+            "context": 128000,
+            "output": 32768
+          }
         }
       }
     }
   },
-  // "mode": {
-  //   "query": {
-  //     "description": "Read-only help: answer questions, no edits",
-  //     "prompt": "You are in query mode. Do not edit files, do not apply patches, do not run commands that modify state. You may read files and run read-only commands (e.g., git status/diff/log, ls, rg) to answer questions. Respond directly without planning unless explicitly asked. You must not commit or push anything. Your job is to answer questions, query documentation, provide information based on the codebase and find solutions.",
-  //     "color": "error",
-  //     "permission": {
-  //       "read": "allow",
-  //       "glob": "allow",
-  //       "grep": "allow",
-  //       "list": "allow",
-  //       "bash": "allow",
-  //       "webfetch": "allow",
-  //       "websearch": "allow",
-  //       "edit": "deny",
-  //       "task": "deny",
-  //       "todowrite": "deny"
-  //     }
-  //   }
-  // },
+  "mode": {
+    "query": {
+      "description": "Read-only help: answer questions, no edits",
+      "prompt": "You are in query mode. Do not edit files, do not apply patches, do not run commands that modify state. You may read files and run read-only commands (e.g., git status/diff/log, ls, rg) to answer questions. Respond directly without planning unless explicitly asked. You must not commit or push anything. Your job is to answer questions, query documentation, provide information based on the codebase and find solutions.",
+      "color": "error",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "edit": "deny",
+        "task": "deny",
+        "todowrite": "deny"
+      }
+    }
+  },
   "theme": "vesper",
   "permission": {
     "read": {
