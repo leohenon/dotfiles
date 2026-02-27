@@ -31,7 +31,7 @@ return {
             },
             git_status = {
               layout_strategy = "horizontal",
-              layout_config = { width = 0.85, height = 0.70, preview_width = 0.55 },
+              layout_config = { prompt_position = "bottom", width = 0.85, height = 0.70, preview_width = 0.55 },
             },
             git_branches = {
               layout_config = { prompt_position = "bottom" },
