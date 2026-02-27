@@ -121,6 +121,102 @@ local function copy_diagnostic_under_cursor()
   vim.notify("Diagnostic copied to clipboard")
 end
 
+local function run_project_lint_checks()
+  local cwd = vim.fn.getcwd()
+  local function has(file)
+    return vim.fn.filereadable(cwd .. "/" .. file) == 1
+  end
+
+  local eslint_configs = {
+    "eslint.config.js",
+    "eslint.config.cjs",
+    "eslint.config.mjs",
+    "eslint.config.ts",
+    ".eslintrc",
+    ".eslintrc.js",
+    ".eslintrc.cjs",
+    ".eslintrc.json",
+    ".eslintrc.yaml",
+    ".eslintrc.yml",
+  }
+
+  local has_eslint = false
+  for _, file in ipairs(eslint_configs) do
+    if has(file) then
+      has_eslint = true
+      break
+    end
+  end
+
+  local args
+  local title
+  local efm
+
+  if has_eslint then
+    title = "Project lint (eslint)"
+    efm = "%f:%l:%c: %m"
+    if vim.fn.executable("pnpm") == 1 and has("pnpm-lock.yaml") then
+      args = { "pnpm", "-s", "eslint", ".", "--ext", ".ts,.tsx,.js,.jsx", "-f", "unix" }
+    elseif vim.fn.executable("yarn") == 1 and has("yarn.lock") then
+      args = { "yarn", "eslint", ".", "--ext", ".ts,.tsx,.js,.jsx", "-f", "unix" }
+    elseif vim.fn.executable("bunx") == 1 then
+      args = { "bunx", "eslint", ".", "--ext", ".ts,.tsx,.js,.jsx", "-f", "unix" }
+    elseif vim.fn.executable("npx") == 1 then
+      args = { "npx", "--yes", "eslint", ".", "--ext", ".ts,.tsx,.js,.jsx", "-f", "unix" }
+    else
+      vim.notify(
+        "Lint: eslint detected but no runner found (pnpm/yarn/bunx/npx)",
+        vim.log.levels.ERROR
+      )
+      return
+    end
+  elseif has("tsconfig.json") then
+    title = "Project lint (tsc --noEmit)"
+    efm = "%f(%l\\,%c): %m"
+    if vim.fn.executable("pnpm") == 1 and has("pnpm-lock.yaml") then
+      args = { "pnpm", "-s", "tsc", "-p", "tsconfig.json", "--noEmit", "--pretty", "false" }
+    elseif vim.fn.executable("yarn") == 1 and has("yarn.lock") then
+      args = { "yarn", "tsc", "-p", "tsconfig.json", "--noEmit", "--pretty", "false" }
+    elseif vim.fn.executable("bunx") == 1 then
+      args = { "bunx", "tsc", "-p", "tsconfig.json", "--noEmit", "--pretty", "false" }
+    elseif vim.fn.executable("npx") == 1 then
+      args = { "npx", "--yes", "tsc", "-p", "tsconfig.json", "--noEmit", "--pretty", "false" }
+    else
+      vim.notify(
+        "Lint: tsconfig detected but no runner found (pnpm/yarn/bunx/npx)",
+        vim.log.levels.ERROR
+      )
+      return
+    end
+  else
+    vim.notify("Lint: no eslint config or tsconfig.json in project root", vim.log.levels.WARN)
+    return
+  end
+
+  local result = vim.system(args, { cwd = cwd, text = true }):wait()
+  local output = (result.stdout or "")
+  if result.stderr and result.stderr ~= "" then
+    output = output .. (output ~= "" and "\n" or "") .. result.stderr
+  end
+  local lines = vim.split(output, "\n", { trimempty = true })
+
+  if #lines == 0 then
+    vim.fn.setqflist({}, "r", { title = title, items = {} })
+    vim.notify("Lint: no issues", vim.log.levels.INFO)
+    return
+  end
+
+  vim.fn.setqflist({}, "r", {
+    title = title,
+    lines = lines,
+    efm = efm,
+  })
+
+  if not pcall(cmd, "Trouble qflist toggle") then
+    cmd("copen")
+  end
+end
+
 local function toggle_markdown_strikethrough()
   local line = vim.api.nvim_get_current_line()
   local indent = line:match("^(%s*)") or ""
@@ -179,7 +275,6 @@ cnoreabbrev("vsl", "leftabove vsplit")
 cnoreabbrev("vsl!", "leftabove vsplit!")
 cnoreabbrev("hst", "leftabove split")
 cnoreabbrev("hst!", "leftabove split!")
-cnoreabbrev("gg", [[lua require("gitgraph").draw({}, { all = true, max_count = 5000 })]])
 cnoreabbrev("dt", "ToggleDiagnostics")
 cnoreabbrev("dv", "DiffviewOpen")
 cnoreabbrev("dc", "DiffviewClose")
@@ -221,8 +316,6 @@ map("n", "<C-d>", "<C-d>zz", { silent = true })
 map("n", "<C-u>", "<C-u>zz", { silent = true })
 map("n", "n", "nzzzv", { silent = true })
 map("n", "N", "Nzzzv", { silent = true })
-map("n", "<C-e>", "5<C-e>", { silent = true })
-map("n", "<C-y>", "5<C-y>", { silent = true })
 
 map("n", "<leader>ss", toggle_markdown_strikethrough, { desc = "Toggle strikethrough (Markdown)" })
 map("n", "<leader>cb", toggle_markdown_checkbox, { desc = "Toggle markdown checkbox" })
