@@ -20,13 +20,11 @@ fi
 
 selected="$(cd "$selected" && pwd)"
 
-base_name="${selected#$HOME/}"
-base_name="${base_name//\//_}"
+base_name="$(basename "$selected")"
 base_name="${base_name//./_}"
 base_name="${base_name// /_}"
-base_name="${base_name//-/_}"
 
-if [ -z "$base_name" ] || [ "$base_name" = "$selected" ]; then
+if [ -z "$base_name" ]; then
 	base_name="main"
 fi
 
