@@ -281,6 +281,7 @@ cnoreabbrev("dc", "DiffviewClose")
 cnoreabbrev("df", [[lua vim.g.diffview_single_file = true vim.cmd("DiffviewOpen HEAD -- %")]])
 cnoreabbrev("gh", "DiffviewFileHistory %")
 cnoreabbrev("ro", "Root")
+cnoreabbrev("o", "only")
 
 map("n", "<leader>cd", cmd.Ex)
 map("n", "<leader>j", explore_current_file, { desc = "Explorer (:Ex) on current file" })
