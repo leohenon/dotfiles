@@ -1,3 +1,5 @@
+set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+
 if status is-interactive
     fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin
     set -gx PATH /usr/bin /bin /usr/sbin /sbin $PATH
@@ -65,87 +67,71 @@ if status is-interactive
             set c_red $LH_COLOR_RED
         end
 
+        set -l branch (prompt_git_branch)
+
+        # venv prefix
+        if set -q VIRTUAL_ENV
+            set_color blue
+            echo -n "("(basename $VIRTUAL_ENV)") "
+            set_color normal
+        end
+
+        # directory — hide on $HOME with no git branch
+        if test "$PWD" != "$HOME" -o -n "$branch"
+            set_color $c_muted
+            echo -n (basename $PWD)
+            set_color normal
+        end
+
+        # git branch
+        if test -n "$branch"
+            echo -n " "
+            set_color blue; echo -n "git:("; set_color normal
+            set_color $c_red; echo -n $branch; set_color normal
+            set_color blue; echo -n ")"; set_color normal
+        end
+
+        # arrow based on mode
         switch $fish_bind_mode
             case default
-                set_color --bold $c_muted
-                echo -n "  "
+                set_color $c_red
+                echo -n " <~ "
             case insert
-                set_color --bold $c_muted
-                echo -n "  "
+                set_color $c_muted
+                echo -n " ~> "
             case visual
-                set_color --bold $c_muted
-                echo -n " 󰈈 "
+                set_color $c_orange
+                echo -n " <~ "
             case replace_one replace
+                set_color $c_red
+                echo -n " <~ "
                 set_color --bold $c_red
-                echo -n " 󰛔 "
+                echo -n "󰛔 "
             case '*'
-                set_color --bold $c_muted
-                echo -n " ? "
+                set_color $c_muted
+                echo -n " ~> "
         end
         set_color normal
     end
 
     function fish_prompt
         set -l st $status
-        _lh_load_theme_colors
-        set -l branch (prompt_git_branch)
-        set -l c_fg "#FEFEFE"
-        set -l c_muted "#A0A0A0"
-        set -l c_mint "#99FFE4"
-        set -l c_orange "#FFCFA8"
-        set -l c_red "#FF8080"
-        if set -q LH_COLOR_FG
-            set c_fg $LH_COLOR_FG
-        end
-        if set -q LH_COLOR_MUTED
-            set c_muted $LH_COLOR_MUTED
-        end
-        if set -q LH_COLOR_MINT
-            set c_mint $LH_COLOR_MINT
-        end
-        if set -q LH_COLOR_ORANGE
-            set c_orange $LH_COLOR_ORANGE
-        end
-        if set -q LH_COLOR_RED
-            set c_red $LH_COLOR_RED
-        end
-
-        if test "$PWD" = "$HOME" -a -z "$branch"
-            if test $st -eq 0
-                set_color $c_muted; echo -n "~> "; set_color normal
-                return
-            else
-                set_color $c_red; echo -n "✖"; set_color normal
-                set_color $c_muted; echo -n " ~> "; set_color normal
-                return
-            end
-        end
-
-        set_color $c_muted; echo -n (basename $PWD); set_color normal
-
-        if test -n "$branch"
-            echo -n " "
-            set_color $c_muted
-            echo -n "git:("
-            set_color $c_mint
-            echo -n $branch
-            set_color $c_muted
-            echo -n ")"
-            set_color normal
-        end
-
         if test $st -ne 0
-            echo -n " "
-            set_color $c_red; echo -n "✖"; set_color normal
+            _lh_load_theme_colors
+            set -l c_red "#FF8080"
+            if set -q LH_COLOR_RED
+                set c_red $LH_COLOR_RED
+            end
+            set_color $c_red; echo -n "✘ "; set_color normal
         end
-
-        set_color $c_muted; echo -n " ~> "; set_color normal
     end
-
     fish_vi_key_bindings
-    bind -M insert \cf accept-autosuggestion
     bind -M insert \t accept-autosuggestion
     bind -M insert \e\t complete
+    bind -M insert \cf 'fp; commandline -f repaint'
+    bind -M insert \ce 'fp; commandline -f repaint'
+    bind -M insert \cs 'fs; commandline -f repaint'
+    bind -M insert \cg 'fv; commandline -f repaint'
 
     function _lh_load_abbreviations
         set -l abbr_file ~/.config/shell/abbrs.tsv
