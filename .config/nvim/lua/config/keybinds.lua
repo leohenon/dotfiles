@@ -294,10 +294,34 @@ map("n", "<C-Left>", "<cmd>vertical resize -5<cr>", { silent = true, desc = "Dec
 map("n", "<C-Right>", "<cmd>vertical resize +5<cr>", { silent = true, desc = "Increase width" })
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { silent = true, desc = "Increase height" })
 map("n", "<C-Down>", "<cmd>resize -2<cr>", { silent = true, desc = "Decrease height" })
-map("n", "<M-h>", "<cmd>vertical resize +5<cr>", { silent = true })
-map("n", "<M-l>", "<cmd>vertical resize -5<cr>", { silent = true })
-map("n", "<M-k>", "<cmd>resize -2<cr>", { silent = true })
-map("n", "<M-j>", "<cmd>resize +2<cr>", { silent = true })
+map("n", "<M-h>", function()
+  if vim.fn.winnr("l") ~= vim.fn.winnr() then
+    vim.cmd("vertical resize -5")
+  else
+    vim.cmd("vertical resize +5")
+  end
+end, { silent = true, desc = "Resize: move border left" })
+map("n", "<M-l>", function()
+  if vim.fn.winnr("l") ~= vim.fn.winnr() then
+    vim.cmd("vertical resize +5")
+  else
+    vim.cmd("vertical resize -5")
+  end
+end, { silent = true, desc = "Resize: move border right" })
+map("n", "<M-k>", function()
+  if vim.fn.winnr("j") ~= vim.fn.winnr() then
+    vim.cmd("resize -2")
+  else
+    vim.cmd("resize +2")
+  end
+end, { silent = true, desc = "Resize: move border up" })
+map("n", "<M-j>", function()
+  if vim.fn.winnr("j") ~= vim.fn.winnr() then
+    vim.cmd("resize +2")
+  else
+    vim.cmd("resize -2")
+  end
+end, { silent = true, desc = "Resize: move border down" })
 
 map("n", "<leader>tn", "<cmd>tabnew<cr>", { desc = "Tab: new" })
 map("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Tab: close" })
