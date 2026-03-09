@@ -1,21 +1,14 @@
 local function lualine_filename()
-  local name = vim.api.nvim_buf_get_name(0)
-  if name == "" then
-    return "[No Name]"
-  end
+	local name = vim.api.nvim_buf_get_name(0)
+	if name == "" then
+		return "[No Name]"
+	end
 
-  local abs = vim.fs.normalize(vim.fn.fnamemodify(name, ":p"))
-  local root = vim.fs.root(abs, { ".git" })
-  if not root or root == "" then
-    root = vim.fn.getcwd()
-  end
-  root = vim.fs.normalize(root)
-
-  local rel = vim.fs.relpath(root, abs) or vim.fn.fnamemodify(abs, ":~")
-  if vim.bo.modified then
-    rel = rel .. " ●"
-  end
-  return rel
+	local path = vim.fn.fnamemodify(name, ":~")
+	if vim.bo.modified then
+		path = path .. " ●"
+	end
+	return path
 end
 
 local function lualine_ahead_behind()
