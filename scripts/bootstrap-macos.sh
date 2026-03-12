@@ -42,5 +42,9 @@ if [[ ! -d "$HOME/.config/tmux/plugins/tpm" ]]; then
 	git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/plugins/tpm"
 fi
 
+if [[ -x "$repo_root/scripts/apply-cmux-keybinds.sh" ]]; then
+	"$repo_root/scripts/apply-cmux-keybinds.sh"
+fi
+
 echo "Bootstrap complete."
 echo "Backups: $backup_dir"
