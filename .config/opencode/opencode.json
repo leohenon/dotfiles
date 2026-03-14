@@ -18,11 +18,11 @@
     "messages_page_up": "ctrl+b",
     "messages_page_down": "ctrl+f",
     "messages_first": "ctrl+shift+g",
-    "messages_last": "ctrl+g",
+    "messages_last": "<leader>g",
     "session_list": "<leader>s",
     "session_new": "<leader>n",
     "model_list": "<leader>m",
-    "editor_open": "ctrl+o",
+    "editor_open": "ctrl+g",
     "sidebar_toggle": "<leader>b",
     "command_list": "<leader>p"
   },
