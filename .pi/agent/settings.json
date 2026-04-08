@@ -1,0 +1,14 @@
+{
+  "lastChangelogVersion": "0.64.0",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.4",
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": true,
+  "theme": "vesper",
+  "packages": [
+    "npm:pi-web-access",
+    "npm:pi-annotate",
+    "npm:@tintinweb/pi-subagents",
+    "git:github.com/leohenon/pi-vim"
+  ]
+}
