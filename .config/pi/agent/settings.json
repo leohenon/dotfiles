@@ -9,6 +9,10 @@
     "npm:pi-web-access",
     "npm:pi-annotate",
     "npm:@tintinweb/pi-subagents",
-    "git:github.com/leohenon/pi-vim"
+    "git:github.com/leohenon/pi-vim",
+    "git:github.com/leohenon/pi-claude-agent-sdk",
+    "npm:pi-anthropic-oauth",
+    "npm:pi-fff"
   ]
 }
+
