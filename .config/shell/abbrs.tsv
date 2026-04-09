@@ -61,6 +61,7 @@ vi	nvim
 py	python3
 pip	pip3
 serve	python3 -m http.server
+o	ocv
 t	tmux
 tsc	tmux switch-client -t
 ta	tmux attach -t
