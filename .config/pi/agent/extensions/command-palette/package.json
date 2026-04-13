@@ -1,0 +1,12 @@
+{
+  "name": "pi-command-palette",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@mariozechner/pi-coding-agent": "^0.66.0",
+    "@mariozechner/pi-tui": "^0.66.0"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}

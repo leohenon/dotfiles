@@ -2,17 +2,28 @@
   "lastChangelogVersion": "0.64.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "xhigh",
   "hideThinkingBlock": true,
   "theme": "vesper",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-annotate",
     "npm:@tintinweb/pi-subagents",
-    "git:github.com/leohenon/pi-vim",
     "git:github.com/leohenon/pi-claude-agent-sdk",
     "npm:pi-anthropic-oauth",
-    "npm:pi-fff"
-  ]
+    "npm:pi-fff",
+    "git:github.com/v2nic/pi-caveman",
+    "npm:@leohenon/pi-vim"
+  ],
+  "extensions": [
+    "/Users/leohenon/dev/dotfiles/.config/pi/agent/extensions/command-palette"
+  ],
+  "retry": {
+    "enabled": true
+  },
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "compaction": {
+    "enabled": true
+  }
 }
-
