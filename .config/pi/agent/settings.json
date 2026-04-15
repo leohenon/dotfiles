@@ -2,7 +2,7 @@
   "lastChangelogVersion": "0.64.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "xhigh",
+  "defaultThinkingLevel": "low",
   "hideThinkingBlock": true,
   "theme": "vesper",
   "packages": [
@@ -13,10 +13,12 @@
     "npm:pi-anthropic-oauth",
     "npm:pi-fff",
     "git:github.com/v2nic/pi-caveman",
-    "npm:@leohenon/pi-vim"
-  ],
-  "extensions": [
-    "/Users/leohenon/dev/dotfiles/.config/pi/agent/extensions/command-palette"
+    "npm:@leohenon/pi-vim",
+    "npm:pi-plan-mode",
+    {
+      "source": "git:github.com/forrestchang/andrej-karpathy-skills",
+      "skills": ["skills/karpathy-guidelines/SKILL.md"]
+    }
   ],
   "retry": {
     "enabled": true
