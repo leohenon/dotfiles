@@ -1,5 +1,7 @@
 gs	git status
-ga	git add
+ga	gstage
+gss	git status --short
+gu	gunstage
 gaa	git add --all
 gb	git branch
 gba	git branch -a
