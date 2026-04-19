@@ -100,7 +100,7 @@ if status is-interactive
     bind -M insert \t accept-autosuggestion
     bind -M insert \e\t complete
     bind -M insert \cf 'fp; commandline -f repaint'
-    bind -M insert \ce 'fp; commandline -f repaint'
+    bind -M insert \ce 'fe; commandline -f repaint'
     bind -M insert \cs 'fs; commandline -f repaint'
     bind -M insert \cg 'fv; commandline -f repaint'
 
