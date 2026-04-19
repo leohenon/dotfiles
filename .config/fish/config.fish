@@ -136,8 +136,8 @@ if status is-interactive
     abbr -a opl   '~/.config/run_opencode_dev.sh'
 
     set -gx OPENCODE_ENABLE_EXA 1
-    set -gx VISUAL vim
-    set -gx EDITOR vim
+    set -gx VISUAL nvim
+    set -gx EDITOR nvim
 end
 
 set --export BUN_INSTALL "$HOME/.bun"
