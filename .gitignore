@@ -6,3 +6,9 @@
 .config/zsh/local.zsh
 .config/tmux/local.conf
 .config/nvim/lua/config/local.lua
+
+.pi/agent/auth.json
+.pi/agent/sessions/
+.pi/agent/cache/
+.pi/agent/git/
+.pi/agent/pi-*.log

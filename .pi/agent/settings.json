@@ -18,7 +18,15 @@
     {
       "source": "git:github.com/forrestchang/andrej-karpathy-skills",
       "skills": ["skills/karpathy-guidelines/SKILL.md"]
-    }
+    },
+    {
+      "source": "git:github.com/leohenon/personal-conventions",
+      "skills": ["+SKILL.md"]
+    },
+    "git:github.com/offline-ant/pi-tmux"
+  ],
+  "themes": [
+    "+themes/vesper.json"
   ],
   "retry": {
     "enabled": true

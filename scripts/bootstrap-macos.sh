@@ -37,6 +37,17 @@ done
 backup_if_exists "$HOME/.zshrc"
 cp -a "$repo_root/.config/zsh/.zshrc" "$HOME/.zshrc"
 
+if ! command -v pi >/dev/null 2>&1; then
+	echo "Installing pi..."
+	npm install -g @mariozechner/pi-coding-agent
+fi
+
+if [[ -d "$repo_root/.pi/agent" ]]; then
+	mkdir -p "$HOME/.pi/agent"
+	rsync -a "$repo_root/.pi/agent/" "$HOME/.pi/agent/"
+	echo "Synced pi config -> $HOME/.pi/agent"
+fi
+
 if [[ ! -d "$HOME/.config/tmux/plugins/tpm" ]]; then
 	echo "Installing tmux plugin manager (tpm)..."
 	git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/plugins/tpm"
