@@ -91,6 +91,45 @@ return {
         builtin.live_grep({ cwd = telescope_startup_cwd() })
       end
 
+      local function telescope_git_root()
+        local dirs = {}
+        local buf = vim.api.nvim_buf_get_name(0)
+
+        if buf ~= "" then
+          table.insert(dirs, vim.fs.dirname(buf))
+        end
+
+        table.insert(dirs, telescope_startup_cwd())
+        table.insert(dirs, vim.fn.getcwd())
+
+        for _, dir in ipairs(dirs) do
+          local root = vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })[1]
+          if vim.v.shell_error == 0 and root and root ~= "" then
+            return root
+          end
+        end
+      end
+
+      local function telescope_live_grep_tracked()
+        local cwd = telescope_git_root()
+        if not cwd then
+          vim.notify("Not in a git repo", vim.log.levels.WARN)
+          return
+        end
+
+        local files = vim.fn.systemlist({ "git", "-C", cwd, "ls-files" })
+        if vim.v.shell_error ~= 0 or vim.tbl_isempty(files) then
+          vim.notify("No tracked files in git repo", vim.log.levels.WARN)
+          return
+        end
+
+        builtin.live_grep({
+          cwd = cwd,
+          search_dirs = files,
+          prompt_title = "Git Tracked Grep",
+        })
+      end
+
       vim.keymap.set(
         "n",
         "<leader>ff",
@@ -117,6 +156,7 @@ return {
       end, { desc = "Git: remote branches (fzf)" })
       vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Git: commits (repo)" })
       vim.keymap.set("n", "<leader>gC", builtin.git_bcommits, { desc = "Git: commits (buffer)" })
+      vim.keymap.set("n", "<leader>fT", telescope_live_grep_tracked, { desc = "Telescope grep tracked files" })
     end,
   },
 }
