@@ -23,7 +23,8 @@
       "source": "git:github.com/leohenon/personal-conventions",
       "skills": ["+SKILL.md"]
     },
-    "git:github.com/offline-ant/pi-tmux"
+    "git:github.com/offline-ant/pi-tmux",
+    "npm:pi-mux"
   ],
   "themes": [
     "+themes/vesper.json"
