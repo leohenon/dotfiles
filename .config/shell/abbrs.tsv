@@ -22,7 +22,6 @@ gds	git diff --staged
 gst	git stash
 gsp	git stash push --staged
 gsa	git stash apply
-gsd	git stash drop
 ghssh	ssh -T git@github.com
 ghpub	gh repo create --public --source=. --remote=origin --push
 ghpriv	gh repo create --private --source=. --remote=origin --push
@@ -39,8 +38,8 @@ dcud	docker compose up -d
 dcd	docker compose down
 dcb	docker compose build
 dcr	docker compose restart
-dcm	docker compose -f docker-compose.monitoring.yml
-dcp	docker compose -f docker-compose.prod.yml
+dcm	docker compose -f docker compose.monitoring.yml
+dcp	docker compose -f docker compose.prod.yml
 dcpn	docker compose exec payload pnpm run
 ll	ls -lah
 la	ls -A
@@ -68,6 +67,6 @@ t	tmux
 tsc	tmux switch-client -t
 ta	tmux attach -t
 tn	tmux new -s
-tk	tmux kill-session -t
+tk	tmux kill-session -t 
 tl	tmux ls
 tlp	tmux list-sessions -F "Session: #S | Root: #{session_path}"
