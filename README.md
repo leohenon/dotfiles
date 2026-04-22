@@ -1,6 +1,6 @@
 # dotfiles
 
-macOS (Homebrew) dotfiles backup for zsh, fish, tmux, nvim, ghostty, homebrew, karabiner, raycast and pi.
+macOS (Homebrew) personal dotfiles backup for zsh, fish, tmux, nvim, ghostty, homebrew, karabiner, raycast and pi.
 
-Restore:
+Restore:  
 `./scripts/bootstrap-macos.sh`
