@@ -34,19 +34,6 @@ if status is-interactive
         end
     end
 
-    function _lh_load_theme_colors
-        set -l theme_file ~/.config/shell/theme-colors
-        if test -f $theme_file
-            # Export syntax works in fish, but we need to make them global
-            for line in (cat $theme_file | grep "^export" | string split '\n')
-                set -l parts (string split -m 1 '=' -- (string replace 'export ' '' -- $line))
-                if test (count $parts) -eq 2
-                    set -gx $parts[1] $parts[2]
-                end
-            end
-        end
-    end
-
     function fish_mode_prompt
     end
 
@@ -66,7 +53,6 @@ if status is-interactive
         if set -q LH_COLOR_ORANGE
             set c_orange $LH_COLOR_ORANGE
         end
-
         set -l branch (prompt_git_branch)
 
         if set -q VIRTUAL_ENV
@@ -96,6 +82,7 @@ if status is-interactive
         echo -n " ✘ "
         set_color normal
     end
+
     fish_vi_key_bindings
     bind -M insert \t accept-autosuggestion
     bind -M insert \e\t complete
@@ -104,47 +91,95 @@ if status is-interactive
     bind -M insert \cs 'fs; commandline -f repaint'
     bind -M insert \cg 'fv; commandline -f repaint'
 
-    function _lh_load_abbreviations
-        set -l abbr_file ~/.config/shell/abbrs.tsv
-        if not test -f $abbr_file
-            return
-        end
+    abbr -a gs    'git status'
+    abbr -a ga    'gstage'
+    abbr -a gss   'git status --short'
+    abbr -a gu    'gunstage'
+    abbr -a gaa   'git add --all'
+    abbr -a gb    'git branch'
+    abbr -a gba   'git branch -a'
+    abbr -a gbd   'git branch -d'
+    abbr -a gcl   'git clone'
+    abbr -a gc    'git commit'
+    abbr -a gcm   'git commit -m'
+    abbr -a gca   'git commit --amend'
+    abbr -a gco   'git checkout'
+    abbr -a gcb   'git checkout -b'
+    abbr -a gl    'git log --oneline --graph --decorate'
+    abbr -a gp    'git push'
+    abbr -a gpsu  'git push --set-upstream origin main'
+    abbr -a gpf   'git push --force-with-lease'
+    abbr -a gpl   'git pull --rebase'
+    abbr -a gd    'git diff'
+    abbr -a gds   'git diff --staged'
+    abbr -a gst   'git stash'
+    abbr -a gsp   'git stash push --staged'
+    abbr -a gsa   'git stash apply'
+    abbr -a ghssh 'ssh -T git@github.com'
+    abbr -a ghpub 'gh repo create --public --source=. --remote=origin --push'
+    abbr -a ghpriv 'gh repo create --private --source=. --remote=origin --push'
 
-        while read -l line
-            if test -z "$line"
-                continue
-            end
-            if string match -qr '^\s*#' -- $line
-                continue
-            end
+    abbr -a dps   'docker ps'
+    abbr -a dpa   'docker ps -a'
+    abbr -a di    'docker images'
+    abbr -a drm   'docker rm'
+    abbr -a drmi  'docker rmi'
+    abbr -a dex   'docker exec -it'
+    abbr -a dlog  'docker logs -f'
 
-            set -l parts (string split -m 1 \t -- $line)
-            if test (count $parts) -lt 2
-                continue
-            end
+    abbr -a dc    'docker compose'
+    abbr -a dcu   'docker compose up'
+    abbr -a dcud  'docker compose up -d'
+    abbr -a dcd   'docker compose down'
+    abbr -a dcb   'docker compose build'
+    abbr -a dcr   'docker compose restart'
+    abbr -a dcm   'docker compose -f docker compose.monitoring.yml'
+    abbr -a dcp   'docker compose -f docker compose.prod.yml'
+    abbr -a dcpn  'docker compose exec payload pnpm run'
 
-            set -l name $parts[1]
-            set -l expansion $parts[2]
-            abbr -a -- $name "$expansion"
-        end < $abbr_file
-    end
-
-    _lh_load_abbreviations
-    functions -e _lh_load_abbreviations
+    abbr -a ll    'ls -lah'
+    abbr -a la    'ls -A'
+    abbr -a ..    'cd ..'
+    abbr -a ...   'cd ../..'
+    abbr -a ....  'cd ../../..'
+    abbr -a c     'clear'
+    abbr -a md    'mkdir -p'
+    abbr -a rd    'rmdir'
 
     abbr -a bunol 'bun run --cwd ~/dev/opencode/packages/opencode dev'
-    abbr -a opl   '~/.config/run_opencode_dev.sh'
+    abbr -a opl '~/.config/run_opencode_dev.sh'
 
-    set -gx OPENCODE_ENABLE_EXA 1
+    abbr -a f     'find . -name'
+    abbr -a rg    'rg --hidden'
+    abbr -a grep  'grep --color=auto'
+    abbr -a h     'history'
+    abbr -a psg   'ps aux | grep -v grep | grep'
+
+    abbr -a ports 'lsof -i -P -n'
+    abbr -a kill9 'kill -9'
+    abbr -a myip  'curl ifconfig.me'
+
     set -gx VISUAL nvim
     set -gx EDITOR nvim
+    abbr -a v     'nvim'
+    abbr -a vi    'nvim'
+    abbr -a py    'python3'
+    abbr -a pip   'pip3'
+    abbr -a serve 'python3 -m http.server'
+
+    set -gx OPENCODE_ENABLE_EXA 1
+    abbr -a o 'ocv'
+
+    abbr -a t 'tmux'
+    abbr -a tsc 'tmux switch-client -t'
+    abbr -a ta 'tmux attach -t'
+    abbr -a tn 'tmux new -s'
+    abbr -a tk 'tmux kill-session -t '
+    abbr -a tl 'tmux ls'
+    abbr -a tlp 'tmux list-sessions -F "Session: #S | Root: #{session_path}"'
 end
 
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 set -gx PATH $PATH /Users/leohenon/.lmstudio/bin
 set PATH $PATH /Users/leohenon/.local/bin
-
-if test -f ~/.config/fish/local.fish
-    source ~/.config/fish/local.fish
-end

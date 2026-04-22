@@ -1,0 +1,10 @@
+{
+  "name": "vesper",
+  "colors": {
+    "fg": "#FEFEFE",
+    "muted": "#A0A0A0",
+    "mint": "#99FFE4",
+    "orange": "#FFCFA8",
+    "red": "#FF8080"
+  }
+}
