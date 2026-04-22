@@ -28,11 +28,14 @@ brew bundle --file "$repo_root/Brewfile"
 
 mkdir -p "$HOME/.config"
 
-for app in fish ghostty nvim tmux zsh; do
+for app in fish ghostty karabiner nvim raycast shell tmux zsh; do
 	backup_if_exists "$HOME/.config/$app"
 	rm -rf "$HOME/.config/$app"
 	cp -a "$repo_root/.config/$app" "$HOME/.config/$app"
 done
+
+backup_if_exists "$HOME/.config/theme.json"
+cp -a "$repo_root/.config/theme.json" "$HOME/.config/theme.json"
 
 backup_if_exists "$HOME/.zshrc"
 cp -a "$repo_root/.config/zsh/.zshrc" "$HOME/.zshrc"
