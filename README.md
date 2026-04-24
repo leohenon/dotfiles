@@ -18,9 +18,3 @@ macOS (Homebrew) personal dotfiles backup.
 | brew      | [./Brewfile](./Brewfile)                                       |
 
 Restore: [`./scripts/bootstrap-macos.sh`](./scripts/bootstrap-macos.sh)
-
-Notes:
-
-- heavily customized, non-standard keybinds
-- dual-shell setup
-- vesper theme throughout
