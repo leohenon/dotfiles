@@ -12,7 +12,7 @@ return {
       pcall(function()
         require("telescope").setup({
           defaults = {
-            sorting_strategy = "descending",
+            sorting_strategy = "ascending",
             layout_config = { prompt_position = "top" },
             preview = {
               treesitter = { enable = false },

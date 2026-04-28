@@ -35,6 +35,7 @@ Minimal, feature-rich Neovim config.
   - `NeogitOrg/neogit`
   - `sindrets/diffview.nvim`
   - `isakbm/gitgraph.nvim`
+  - `pwntester/octo.nvim`
 - **syntax/format**
   - `nvim-treesitter/nvim-treesitter`
   - `nvim-treesitter/nvim-treesitter-context`
@@ -48,3 +49,12 @@ Minimal, feature-rich Neovim config.
   - `folke/todo-comments.nvim`
   - `folke/persistence.nvim`
   - `kawre/leetcode.nvim`
+
+## github
+
+Octo is configured to use Telescope and prefer `origin` before `upstream` for forked repos.
+
+- `<leader>oo` — open Octo commands
+- `<leader>op` — list pull requests for the current repo
+- `<leader>oi` — list issues for the current repo
+- `<leader>on` — list notifications

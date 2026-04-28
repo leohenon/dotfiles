@@ -146,4 +146,24 @@ return {
 			})
 		end,
 	},
+	{
+		"pwntester/octo.nvim",
+		cmd = "Octo",
+		keys = {
+			{ "<leader>oo", "<cmd>Octo<cr>", desc = "GitHub: Octo commands" },
+			{ "<leader>op", "<cmd>Octo pr list<cr>", desc = "GitHub: pull requests" },
+			{ "<leader>oi", "<cmd>Octo issue list<cr>", desc = "GitHub: issues" },
+			{ "<leader>on", "<cmd>Octo notification list<cr>", desc = "GitHub: notifications" },
+		},
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		opts = {
+			picker = "telescope",
+			enable_builtin = true,
+			default_remote = { "origin", "upstream" },
+		},
+	},
 }
