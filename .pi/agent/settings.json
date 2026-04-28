@@ -24,7 +24,14 @@
       "skills": ["+SKILL.md"]
     },
     "git:github.com/offline-ant/pi-tmux",
-    "npm:pi-mux"
+    "npm:pi-mux",
+    {
+      "source": "npm:@tryinget/pi-little-helpers",
+      "extensions": [
+        "+extensions/stash.ts"
+      ],
+      "prompts": []
+    }
   ],
   "themes": [
     "+themes/vesper.json"
