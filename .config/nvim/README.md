@@ -1,7 +1,5 @@
 # nvim
 
-Minimal, feature-rich Neovim config.
-
 ![nvim](assets/nvim.png)
 
 ## plugins
@@ -42,6 +40,7 @@ Minimal, feature-rich Neovim config.
   - `stevearc/conform.nvim`
 - **ui/tools**
   - `nvim-lualine/lualine.nvim`
+  - `gorbit99/codewindow.nvim`
   - `akinsho/toggleterm.nvim`
   - `folke/trouble.nvim`
   - `mbbill/undotree`
@@ -49,12 +48,3 @@ Minimal, feature-rich Neovim config.
   - `folke/todo-comments.nvim`
   - `folke/persistence.nvim`
   - `kawre/leetcode.nvim`
-
-## github
-
-Octo is configured to use Telescope and prefer `origin` before `upstream` for forked repos.
-
-- `<leader>oo` — open Octo commands
-- `<leader>op` — list pull requests for the current repo
-- `<leader>oi` — list issues for the current repo
-- `<leader>on` — list notifications

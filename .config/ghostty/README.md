@@ -1,7 +1,5 @@
 # ghostty
 
-Minimal Ghostty config.
-
 - no window chrome
 - no tabs
 - tight padding

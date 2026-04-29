@@ -1,7 +1,5 @@
 # karabiner
 
-Small Karabiner config for a few remaps.
-
 Rules:
 
 - left option-tab -> control-tab in Arc

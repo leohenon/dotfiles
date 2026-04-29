@@ -102,6 +102,23 @@ return {
   },
 
   {
+    "gorbit99/codewindow.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("codewindow.config").setup({
+        auto_enable = false,
+        use_treesitter = false,
+      })
+
+      local codewindow = require("codewindow")
+      codewindow.setup()
+
+      vim.keymap.set("n", "<leader>wt", codewindow.toggle_minimap, { desc = "Codewindow: toggle minimap" })
+      vim.keymap.set("n", "<leader>wf", codewindow.toggle_focus, { desc = "Codewindow: toggle focus" })
+    end,
+  },
+
+  {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {

@@ -1,7 +1,5 @@
 # fish
 
-Ergonomic fish shell config.
-
 ![fish-prompt](assets/prompt.png)
 
 Helpers:

@@ -1,6 +1,6 @@
 # zsh
 
-Opinionated zsh config. Matches [fish](../fish/README.md).
+Matches [fish](../fish/README.md).
 
 ![zsh](assets/prompt.png)
 
