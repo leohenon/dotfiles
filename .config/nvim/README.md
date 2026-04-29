@@ -40,7 +40,7 @@
   - `stevearc/conform.nvim`
 - **ui/tools**
   - `nvim-lualine/lualine.nvim`
-  - `gorbit99/codewindow.nvim`
+  - `Isrothy/neominimap.nvim`
   - `akinsho/toggleterm.nvim`
   - `folke/trouble.nvim`
   - `mbbill/undotree`

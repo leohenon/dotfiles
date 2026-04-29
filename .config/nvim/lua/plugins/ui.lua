@@ -102,19 +102,20 @@ return {
   },
 
   {
-    "gorbit99/codewindow.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("codewindow.config").setup({
+    "Isrothy/neominimap.nvim",
+    version = "*",
+    lazy = false,
+    keys = {
+      { "<leader>wt", "<cmd>Neominimap Toggle<cr>", desc = "Minimap: toggle" },
+      { "<leader>wf", "<cmd>Neominimap ToggleFocus<cr>", desc = "Minimap: toggle focus" },
+    },
+    init = function()
+      vim.opt.wrap = false
+      vim.opt.sidescrolloff = 36
+
+      vim.g.neominimap = {
         auto_enable = false,
-        use_treesitter = false,
-      })
-
-      local codewindow = require("codewindow")
-      codewindow.setup()
-
-      vim.keymap.set("n", "<leader>wt", codewindow.toggle_minimap, { desc = "Codewindow: toggle minimap" })
-      vim.keymap.set("n", "<leader>wf", codewindow.toggle_focus, { desc = "Codewindow: toggle focus" })
+      }
     end,
   },
 
