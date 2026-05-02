@@ -155,6 +155,16 @@ if status is-interactive
     abbr -a h     'history'
     abbr -a psg   'ps aux | grep -v grep | grep'
 
+    function g --description 'Google search in browser'
+        if test (count $argv) -eq 0
+            echo 'usage: g search terms'
+            return 1
+        end
+
+        set -l query (python3 -c 'import urllib.parse, sys; print(urllib.parse.quote_plus(" ".join(sys.argv[1:])))' $argv)
+        open "https://www.google.com/search?q=$query"
+    end
+
     abbr -a ports 'lsof -i -P -n'
     abbr -a kill9 'kill -9'
     abbr -a myip  'curl ifconfig.me'
