@@ -19,7 +19,13 @@ function gstage --description 'Select files with fzf and stage them'
     end
 
     set -l picked (
-        printf '%s\n' $candidates | fzf -m --prompt='stage > '
+        printf '%s\n' $candidates | fzf \
+            --multi \
+            --prompt='stage > ' \
+            --header='Tab mark | S all | Enter ok' \
+            --bind='S:select-all+accept' \
+            --preview='git diff --color=always -- {} 2>/dev/null || cat {} 2>/dev/null' \
+            --preview-window='right:60%'
     )
     or return
 
