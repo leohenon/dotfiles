@@ -1,0 +1,35 @@
+[alias]
+	ds = -c core.pager='delta --side-by-side' diff
+
+[delta]
+	features = vesper
+	navigate = true
+	line-numbers = true
+	decorations = true
+	hyperlinks = true
+
+[delta "vesper"]
+	dark = true
+	syntax-theme = "Vesper"
+
+	# Strict Vesper palette, matched to the Neovim theme:
+	# bg=#101010, bgDark=#161616, bgDarker=#232323, bgFloat=#282828, bgOption=#343434
+	# fg=#CCCCCC, fgAlt=#FEFEFE, fgLineNr=#505050, primary=#A0A0A0, symbol=#65737E
+	# green=#82D9C2, orange=#FFCFA8, red=#FF8080
+	# diffAdd=#497469, diffDelete=#884848, diffChange=#88705C, diffText=#3A4247
+	commit-style = "bold #FFCFA8"
+	file-style = "bold #FFCFA8"
+	file-decoration-style = "#343434"
+	hunk-header-style = "syntax bold #161616"
+	hunk-header-decoration-style = "#343434"
+
+	line-numbers-left-style = "#505050 #161616"
+	line-numbers-right-style = "#505050 #161616"
+	line-numbers-minus-style = "#884848 #251919"
+	line-numbers-plus-style = "#497469 #16201E"
+
+	minus-style = "syntax #251919"
+	minus-emph-style = "syntax bold #3D2323"
+	plus-style = "syntax #16201E"
+	plus-emph-style = "syntax bold #203730"
+	zero-style = "syntax #101010"
