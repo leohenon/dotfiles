@@ -49,12 +49,6 @@
       ]
     },
     {
-      "source": "npm:@leohenon/pi-vim",
-      "extensions": [
-        "+index.ts"
-      ]
-    },
-    {
       "source": "git:github.com/forrestchang/andrej-karpathy-skills",
       "skills": [
         "+skills/karpathy-guidelines/SKILL.md"
@@ -131,6 +125,12 @@
     },
     {
       "source": "git:github.com/leohenon/my-pi-statusline",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/leohenon/pi-vim@vim-status-bar",
       "extensions": [
         "+index.ts"
       ]
