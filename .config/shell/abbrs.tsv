@@ -49,6 +49,8 @@ la	ls -A
 c	clear
 md	mkdir -p
 rd	rmdir
+bunol	bun run --cwd ~/dev/opencode/packages/opencode dev
+opl	~/.config/run_opencode_dev.sh
 f	find . -name
 rg	rg --hidden
 grep	grep --color=auto
@@ -62,6 +64,7 @@ vi	nvim
 py	python3
 pip	pip3
 serve	python3 -m http.server
+grip	go-grip
 o	ocv
 t	tmux
 tsc	tmux switch-client -t

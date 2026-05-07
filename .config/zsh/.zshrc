@@ -1,4 +1,4 @@
-export PATH="$PATH:/Users/leohenon/.lmstudio/bin"
+export PATH="$HOME/go/bin:$PATH:/Users/leohenon/.lmstudio/bin"
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 if [[ -o interactive ]]; then

@@ -91,69 +91,17 @@ if status is-interactive
     bind -M insert \cs 'fs; commandline -f repaint'
     bind -M insert \cg 'fv; commandline -f repaint'
 
-    abbr -a gs    'git status'
-    abbr -a ga    'gstage'
-    abbr -a gss   'git status --short'
-    abbr -a gu    'gunstage'
-    abbr -a gaa   'git add --all'
-    abbr -a gb    'git branch'
-    abbr -a gba   'git branch -a'
-    abbr -a gbd   'git branch -d'
-    abbr -a gcl   'git clone'
-    abbr -a gc    'git commit'
-    abbr -a gcm   'git commit -m'
-    abbr -a gca   'git commit --amend'
-    abbr -a gco   'git checkout'
-    abbr -a gcb   'git checkout -b'
-    abbr -a gl    'git log --oneline --graph --decorate'
-    abbr -a gp    'git push'
-    abbr -a gpsu  'git push --set-upstream origin main'
-    abbr -a gpf   'git push --force-with-lease'
-    abbr -a gpl   'git pull --rebase'
-    abbr -a gd    'git diff'
-    abbr -a gds   'git diff --staged'
-    abbr -a gst   'git stash'
-    abbr -a gsp   'git stash push --staged'
-    abbr -a gsa   'git stash apply'
-    abbr -a ghssh 'ssh -T git@github.com'
-    abbr -a ghpub 'gh repo create --public --source=. --remote=origin --push'
-    abbr -a ghpriv 'gh repo create --private --source=. --remote=origin --push'
-
-    abbr -a dps   'docker ps'
-    abbr -a dpa   'docker ps -a'
-    abbr -a di    'docker images'
-    abbr -a drm   'docker rm'
-    abbr -a drmi  'docker rmi'
-    abbr -a dex   'docker exec -it'
-    abbr -a dlog  'docker logs -f'
-
-    abbr -a dc    'docker compose'
-    abbr -a dcu   'docker compose up'
-    abbr -a dcud  'docker compose up -d'
-    abbr -a dcd   'docker compose down'
-    abbr -a dcb   'docker compose build'
-    abbr -a dcr   'docker compose restart'
-    abbr -a dcm   'docker compose -f docker compose.monitoring.yml'
-    abbr -a dcp   'docker compose -f docker compose.prod.yml'
-    abbr -a dcpn  'docker compose exec payload pnpm run'
-
-    abbr -a ll    'ls -lah'
-    abbr -a la    'ls -A'
-    abbr -a ..    'cd ..'
-    abbr -a ...   'cd ../..'
-    abbr -a ....  'cd ../../..'
-    abbr -a c     'clear'
-    abbr -a md    'mkdir -p'
-    abbr -a rd    'rmdir'
-
-    abbr -a bunol 'bun run --cwd ~/dev/opencode/packages/opencode dev'
-    abbr -a opl '~/.config/run_opencode_dev.sh'
-
-    abbr -a f     'find . -name'
-    abbr -a rg    'rg --hidden'
-    abbr -a grep  'grep --color=auto'
-    abbr -a h     'history'
-    abbr -a psg   'ps aux | grep -v grep | grep'
+    set -l abbr_file "$HOME/.config/shell/abbrs.tsv"
+    if test -r $abbr_file
+        set -l tab (printf '\t')
+        while read -l line
+            test -z "$line"; and continue
+            string match -qr '^\s*#' -- $line; and continue
+            set -l parts (string split -m1 $tab -- $line)
+            test (count $parts) -lt 2; and continue
+            abbr -a -- $parts[1] "$parts[2]"
+        end < $abbr_file
+    end
 
     function g --description 'Google search in browser'
         if test (count $argv) -eq 0
@@ -179,10 +127,6 @@ if status is-interactive
         open $url
     end
 
-    abbr -a ports 'lsof -i -P -n'
-    abbr -a kill9 'kill -9'
-    abbr -a myip  'curl ifconfig.me'
-
     set -gx VISUAL nvim
     set -gx EDITOR nvim
 
@@ -196,22 +140,8 @@ if status is-interactive
         end
     end
 
-    abbr -a v     'nvim'
-    abbr -a vi    'nvim'
-    abbr -a py    'python3'
-    abbr -a pip   'pip3'
-    abbr -a serve 'python3 -m http.server'
-
     set -gx OPENCODE_ENABLE_EXA 1
-    abbr -a o 'ocv'
 
-    abbr -a t 'tmux'
-    abbr -a tsc 'tmux switch-client -t'
-    abbr -a ta 'tmux attach -t'
-    abbr -a tn 'tmux new -s'
-    abbr -a tk 'tmux kill-session -t '
-    abbr -a tl 'tmux ls'
-    abbr -a tlp 'tmux list-sessions -F "Session: #S | Root: #{session_path}"'
 end
 
 set --export BUN_INSTALL "$HOME/.bun"
