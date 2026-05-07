@@ -165,6 +165,20 @@ if status is-interactive
         open "https://www.google.com/search?q=$query"
     end
 
+    function u --description 'Open direct URL in browser'
+        if test (count $argv) -eq 0
+            echo 'usage: u url'
+            return 1
+        end
+
+        set -l url $argv[1]
+        if not string match -qr '^[a-zA-Z][a-zA-Z0-9+.-]*://' -- $url
+            set url "https://$url"
+        end
+
+        open $url
+    end
+
     abbr -a ports 'lsof -i -P -n'
     abbr -a kill9 'kill -9'
     abbr -a myip  'curl ifconfig.me'
