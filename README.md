@@ -2,8 +2,6 @@
 
 macOS (Homebrew) personal dotfiles backup.
 
-> Minimal style, opinionated internals.
-
 | component | link                                                           |
 | --------- | -------------------------------------------------------------- |
 | karabiner | [./.config/karabiner/README.md](./.config/karabiner/README.md) |
@@ -14,7 +12,16 @@ macOS (Homebrew) personal dotfiles backup.
 | zsh       | [./.config/zsh/README.md](./.config/zsh/README.md)             |
 | shell     | [./.config/shell/README.md](./.config/shell/README.md)         |
 | nvim      | [./.config/nvim/README.md](./.config/nvim/README.md)           |
-| pi        | [./.pi/agent/README.md](./.pi/agent/README.md)                 |
+| delta     | [./.config/delta/README.md](./.config/delta/README.md)         |
+| pi        | [./.pi/README.md](./.pi/README.md)                             |
 | brew      | [./Brewfile](./Brewfile)                                       |
 
 Restore: [`./scripts/bootstrap-macos.sh`](./scripts/bootstrap-macos.sh)
+
+---
+
+![Neovim screenshot](./assets/nvim2.png)
+
+![Shell screenshot](./assets/shell.png)
+
+![Pi screenshot](./assets/pi.png)

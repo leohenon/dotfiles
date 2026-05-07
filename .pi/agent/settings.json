@@ -1,36 +1,139 @@
 {
-  "lastChangelogVersion": "0.64.0",
+  "lastChangelogVersion": "0.68.1",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.4",
+  "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "low",
   "hideThinkingBlock": true,
   "theme": "vesper",
   "packages": [
-    "npm:pi-web-access",
-    "npm:pi-annotate",
-    "npm:@tintinweb/pi-subagents",
-    "git:github.com/leohenon/pi-claude-agent-sdk",
-    "npm:pi-anthropic-oauth",
-    "npm:pi-fff",
-    "git:github.com/v2nic/pi-caveman",
-    "npm:@leohenon/pi-vim",
-    "npm:pi-plan-mode",
+    {
+      "source": "npm:pi-web-access",
+      "extensions": [
+        "+index.ts"
+      ],
+      "skills": [
+        "+skills/librarian/SKILL.md"
+      ]
+    },
+    {
+      "source": "npm:pi-annotate",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:@tintinweb/pi-subagents",
+      "extensions": [
+        "+src/index.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/leohenon/pi-claude-agent-sdk",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-fff",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/v2nic/pi-caveman",
+      "extensions": [
+        "+extensions/caveman/index.ts"
+      ],
+      "skills": [
+        "+skills/caveman/SKILL.md"
+      ]
+    },
+    {
+      "source": "npm:@leohenon/pi-vim",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
     {
       "source": "git:github.com/forrestchang/andrej-karpathy-skills",
-      "skills": ["skills/karpathy-guidelines/SKILL.md"]
+      "skills": [
+        "+skills/karpathy-guidelines/SKILL.md"
+      ]
     },
     {
-      "source": "git:github.com/leohenon/personal-conventions",
-      "skills": ["+SKILL.md"]
+      "source": "npm:pi-anthropic-oauth",
+      "extensions": [
+        "+src/index.ts"
+      ]
     },
-    "git:github.com/offline-ant/pi-tmux",
-    "npm:pi-mux",
+    {
+      "source": "git:github.com/offline-ant/pi-tmux",
+      "extensions": [
+        "+extensions/supervisor.ts",
+        "+extensions/tmux.ts",
+        "+extensions/fork-split.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-mux",
+      "extensions": [
+        "+src/index.ts"
+      ]
+    },
     {
       "source": "npm:@tryinget/pi-little-helpers",
       "extensions": [
         "+extensions/stash.ts"
       ],
       "prompts": []
+    },
+    {
+      "source": "git:github.com/badlogic/pi-telegram",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-whisper",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-snake",
+      "extensions": [
+        "+extensions/pi-snake.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/leohenon/personal-conventions",
+      "skills": [
+        "+skills/personal-conventions/SKILL.md"
+      ]
+    },
+    {
+      "source": "npm:pi-session-summary",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-tool-display",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "npm:pi-skill-palette",
+      "extensions": [
+        "+index.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/leohenon/my-pi-statusline",
+      "extensions": [
+        "+index.ts"
+      ]
     }
   ],
   "themes": [
@@ -43,5 +146,17 @@
   "followUpMode": "all",
   "compaction": {
     "enabled": true
-  }
+  },
+  "powerline": {
+    "preset": "default",
+    "fixedEditor": false,
+    "vim": true
+  },
+  "prompts": [
+    "-prompts/analyze-issue.md",
+    "-prompts/commit-msg.md",
+    "-prompts/pr-review.md"
+  ],
+  "quietStartup": false,
+  "collapseChangelog": false
 }
