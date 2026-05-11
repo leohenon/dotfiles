@@ -18,13 +18,13 @@
 	# bg=#101010, bgDark=#161616, bgDarker=#232323, bgFloat=#282828, bgOption=#343434
 	# fg=#CCCCCC, fgAlt=#FEFEFE, fgLineNr=#505050, primary=#A0A0A0, symbol=#65737E
 	# green=#82D9C2, orange=#FFCFA8, red=#FF8080
-	# diffAdd=#497469, diffDelete=#884848, diffChange=#88705C, diffText=#3A4247
+	# piDiffAdded=#A8CC8C, piDiffRemoved=#F28779, piDiffAddBg=#162017, piDiffRemoveBg=#241716
 	commit-style = "bold #FFCFA8"
 	file-style = "bold #FFCFA8"
 	file-decoration-style = "#343434"
-	file-added-label = "[38;2;130;217;194mA"
+	file-added-label = "[38;2;168;204;140mA"
 	file-modified-label = "[38;2;255;207;168mM"
-	file-removed-label = "[38;2;255;128;128mD"
+	file-removed-label = "[38;2;242;135;121mD"
 	file-renamed-label = "[38;2;160;160;160mR"
 	file-copied-label = "[38;2;101;115;126mC"
 	navigate-regex = "^(commit|A|M|D|R|C)"
@@ -37,11 +37,11 @@
 	line-numbers-left-style = "#505050 #101010"
 	line-numbers-right-style = "#505050 #101010"
 	line-numbers-zero-style = "#505050 #101010"
-	line-numbers-minus-style = "#884848 #101010"
-	line-numbers-plus-style = "#497469 #101010"
+	line-numbers-minus-style = "#F28779 #101010"
+	line-numbers-plus-style = "#A8CC8C #101010"
 
-	minus-style = "syntax #251919"
-	minus-emph-style = "syntax bold #3D2323"
-	plus-style = "syntax #16201E"
-	plus-emph-style = "syntax bold #203730"
+	minus-style = "syntax #241716"
+	minus-emph-style = "syntax bold #241716"
+	plus-style = "syntax #162017"
+	plus-emph-style = "syntax bold #162017"
 	zero-style = "syntax #101010"
