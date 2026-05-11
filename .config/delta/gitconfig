@@ -1,6 +1,7 @@
 [alias]
 	ds = -c core.pager=delta -c delta.side-by-side=true diff
 	dsa = !git add -N . && git -c core.pager=delta -c delta.side-by-side=true diff
+	dss = -c core.pager=delta -c delta.side-by-side=true diff --staged
 
 [delta]
 	features = vesper

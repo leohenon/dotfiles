@@ -103,6 +103,15 @@ if status is-interactive
         end < $abbr_file
     end
 
+    function ds --description 'Delta side-by-side diff'
+        command git -c core.pager=delta -c delta.side-by-side=true diff $argv
+    end
+
+    function dsa --description 'Delta side-by-side diff including untracked files'
+        command git add -N .
+        and command git -c core.pager=delta -c delta.side-by-side=true diff $argv
+    end
+
     function g --description 'Google search in browser'
         if test (count $argv) -eq 0
             echo 'usage: g search terms'
