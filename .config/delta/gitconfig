@@ -1,5 +1,6 @@
 [alias]
 	ds = -c core.pager=delta -c delta.side-by-side=true diff
+	dsa = !git add -N . && git -c core.pager=delta -c delta.side-by-side=true diff
 
 [delta]
 	features = vesper
@@ -20,11 +21,12 @@
 	commit-style = "bold #FFCFA8"
 	file-style = "bold #FFCFA8"
 	file-decoration-style = "#343434"
-	file-added-label = "A"
-	file-modified-label = "M"
-	file-removed-label = "D"
-	file-renamed-label = "R"
-	file-copied-label = "C"
+	file-added-label = "[38;2;130;217;194mA"
+	file-modified-label = "[38;2;255;207;168mM"
+	file-removed-label = "[38;2;255;128;128mD"
+	file-renamed-label = "[38;2;160;160;160mR"
+	file-copied-label = "[38;2;101;115;126mC"
+	navigate-regex = "^(commit|A|M|D|R|C)"
 	hunk-header-style = "syntax bold #161616"
 	hunk-header-decoration-style = "#343434"
 
