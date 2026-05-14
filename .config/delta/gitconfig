@@ -1,7 +1,7 @@
 [alias]
-	ds = -c core.pager=delta -c delta.side-by-side=true diff
-	dsa = !git add -N . && git -c core.pager=delta -c delta.side-by-side=true diff
-	dss = -c core.pager=delta -c delta.side-by-side=true diff --staged
+	ds = !~/.config/delta/delta-diff
+	dsa = !~/.config/delta/delta-diff --intent-to-add
+	dss = !~/.config/delta/delta-diff --staged
 
 [delta]
 	features = vesper
@@ -27,7 +27,7 @@
 	file-removed-label = "[38;2;242;135;121mD"
 	file-renamed-label = "[38;2;160;160;160mR"
 	file-copied-label = "[38;2;101;115;126mC"
-	navigate-regex = "^(commit|A|M|D|R|C)"
+	navigate-regex = "^(commit|A .*|M .*|D .*|R .*|C .*)"
 	hunk-header-style = "syntax bold #161616"
 	hunk-header-decoration-style = "#343434"
 

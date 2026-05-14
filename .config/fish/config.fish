@@ -104,12 +104,15 @@ if status is-interactive
     end
 
     function ds --description 'Delta side-by-side diff'
-        command git -c core.pager=delta -c delta.side-by-side=true diff $argv
+        command ~/.config/delta/delta-diff $argv
     end
 
     function dsa --description 'Delta side-by-side diff including untracked files'
-        command git add -N .
-        and command git -c core.pager=delta -c delta.side-by-side=true diff $argv
+        command ~/.config/delta/delta-diff --intent-to-add $argv
+    end
+
+    function dss --description 'Delta side-by-side staged diff'
+        command ~/.config/delta/delta-diff --staged $argv
     end
 
     function g --description 'Google search in browser'

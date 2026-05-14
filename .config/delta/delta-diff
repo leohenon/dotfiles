@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="worktree"
+intent_to_add="false"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --staged)
+      mode="staged"
+      shift
+      ;;
+    --intent-to-add)
+      intent_to_add="true"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [[ "$intent_to_add" == "true" ]]; then
+  git add -N .
+fi
+
+diff_args=()
+if [[ "$mode" == "staged" ]]; then
+  diff_args+=(--staged)
+fi
+diff_args+=("$@")
+
+width="${COLUMNS:-}"
+if [[ -z "$width" && -n "${TMUX:-}" ]]; then
+  width="$(tmux display-message -p '#{pane_width}' 2>/dev/null || true)"
+fi
+if [[ -z "$width" ]]; then
+  width="$(stty size < /dev/tty 2>/dev/null | awk '{print $2}' || true)"
+fi
+if [[ -z "$width" ]]; then
+  width="$(tput cols 2>/dev/null || echo 120)"
+fi
+
+{
+  git diff --numstat "${diff_args[@]}" | awk '
+    function fmt(n, s) {
+      if (n >= 1000) {
+        s = sprintf("%.1fk", n / 1000)
+        sub(/\.0k$/, "k", s)
+        return s
+      }
+      return n
+    }
+    NF >= 3 {
+      files++
+      if ($1 != "-") added += $1
+      if ($2 != "-") deleted += $2
+    }
+    END {
+      green = "\033[38;2;168;204;140m"
+      red = "\033[38;2;242;135;121m"
+      reset = "\033[39m"
+      printf "%d file%s changed: %s+%s%s %s-%s%s\n", files, (files == 1 ? "" : "s"), green, fmt(added), reset, red, fmt(deleted), reset
+    }
+  '
+
+  git diff "${diff_args[@]}" \
+    | delta --features vesper --side-by-side --width "$width" --paging=never \
+    | awk 'seen || $0 !~ /^[[:space:]]*$/ { seen = 1; print }'
+} | delta --paging=always --color-only
