@@ -71,4 +71,4 @@ fi
   git diff "${diff_args[@]}" \
     | delta --features vesper --side-by-side --width "$width" --paging=never \
     | awk 'seen || $0 !~ /^[[:space:]]*$/ { seen = 1; print }'
-} | delta --paging=always --color-only
+} | LESS="-R -X" delta --paging=auto --color-only
