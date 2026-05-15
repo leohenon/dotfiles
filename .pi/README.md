@@ -21,7 +21,7 @@ pi config lives here at `.pi/agent/` and is rsynced to `~/.pi/agent/` by `script
 - `npm:pi-whisper`
 - `npm:pi-snake`
 - `npm:pi-session-summary`
-- `npm:pi-tool-display`
+- `git:github.com/leohenon/pi-tool-display`
 - `npm:pi-skill-palette`
 - `git:github.com/leohenon/my-pi-statusline`
 

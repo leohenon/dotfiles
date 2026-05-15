@@ -112,7 +112,7 @@
       ]
     },
     {
-      "source": "npm:pi-tool-display",
+      "source": "git:github.com/leohenon/pi-tool-display",
       "extensions": [
         "+index.ts"
       ]
