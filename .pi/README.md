@@ -24,6 +24,7 @@ pi config lives here at `.pi/agent/` and is rsynced to `~/.pi/agent/` by `script
 - `npm:pi-skill-palette`
 - `git:github.com/leohenon/my-pi-statusline`
 - `git:github.com/leohenon/pi-vim@vim-status-bar`
+- `npm:@haispeed/pi-obsidian`
 
 ## Skills
 
@@ -31,6 +32,7 @@ pi config lives here at `.pi/agent/` and is rsynced to `~/.pi/agent/` by `script
 - `git:github.com/v2nic/pi-caveman`
 - `git:github.com/forrestchang/andrej-karpathy-skills`
 - `git:github.com/leohenon/personal-conventions`
+- `npm:@haispeed/pi-obsidian`
 
 ## Theme
 

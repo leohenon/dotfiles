@@ -133,7 +133,8 @@
       "extensions": [
         "+index.ts"
       ]
-    }
+    },
+    "npm:@haispeed/pi-obsidian"
   ],
   "themes": [
     "+themes/vesper.json"
