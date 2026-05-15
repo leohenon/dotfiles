@@ -100,9 +100,9 @@ return {
 					end
 
 					vim.opt.fillchars:append({ diff = "╱" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3c1f1f" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#1f3825" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6e7681" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
 				end,
 			},
 		},
@@ -110,9 +110,9 @@ return {
 			require("diffview").setup(opts)
 			vim.api.nvim_create_autocmd("ColorScheme", {
 				callback = function()
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3c1f1f" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#1f3825" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6e7681" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
 				end,
 			})
 
@@ -139,9 +139,9 @@ return {
 						vim.g.diffview_single_file = nil
 					end
 
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3c1f1f" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#1f3825" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6e7681" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
+					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
 				end,
 			})
 		end,
