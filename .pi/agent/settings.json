@@ -75,12 +75,11 @@
       ]
     },
     {
-      "source": "npm:@tryinget/pi-little-helpers",
+      "source": "git:github.com/leohenon/pi-stash",
       "extensions": [
-        "+extensions/stash.ts"
-      ],
-      "prompts": []
-    },
+        "+src/index.ts"
+      ]
+    }
     {
       "source": "git:github.com/badlogic/pi-telegram",
       "extensions": [
