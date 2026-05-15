@@ -108,12 +108,19 @@ return {
 		},
 		config = function(_, opts)
 			require("diffview").setup(opts)
+
+			local function set_diffview_hl()
+				vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
+				vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
+				vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
+				vim.api.nvim_set_hl(0, "DiffviewStatusAdded", { fg = "#A8CC8C", bold = true })
+				vim.api.nvim_set_hl(0, "DiffviewStatusModified", { fg = "#FFCFA8", bold = true })
+				vim.api.nvim_set_hl(0, "DiffviewStatusDeleted", { fg = "#F28779", bold = true })
+			end
+
+			set_diffview_hl()
 			vim.api.nvim_create_autocmd("ColorScheme", {
-				callback = function()
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
-				end,
+				callback = set_diffview_hl,
 			})
 
 			local group_folds = vim.api.nvim_create_augroup("DiffviewFolds", { clear = true })
@@ -139,9 +146,7 @@ return {
 						vim.g.diffview_single_file = nil
 					end
 
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
+					set_diffview_hl()
 				end,
 			})
 		end,
