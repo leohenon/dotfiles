@@ -40,8 +40,8 @@
 	line-numbers-minus-style = "#F28779 #101010"
 	line-numbers-plus-style = "#A8CC8C #101010"
 
-	minus-style = "syntax #241716"
-	minus-emph-style = "syntax bold #241716"
-	plus-style = "syntax #162017"
-	plus-emph-style = "syntax bold #162017"
+	minus-style = "syntax #3A2020"
+	minus-emph-style = "syntax bold #3A2020"
+	plus-style = "syntax #203A34"
+	plus-emph-style = "syntax bold #203A34"
 	zero-style = "syntax #101010"
