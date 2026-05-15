@@ -20,8 +20,18 @@ Restore: [`./scripts/bootstrap-macos.sh`](./scripts/bootstrap-macos.sh)
 
 ---
 
-![Neovim screenshot](./assets/nvim2.png)
+## nvim
 
-![Shell screenshot](./assets/shell.png)
+![nvim screenshot](./assets/nvim.png)
 
-![Pi screenshot](./assets/pi.png)
+## diffview.nvim
+
+![diffview screenshot](./assets/diffview.png)
+
+## delta
+
+![delta screenshot](./assets/delta.png)
+
+## pi
+
+![pi screenshot](./assets/pi.png)

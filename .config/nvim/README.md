@@ -1,6 +1,6 @@
 # nvim
 
-![nvim](assets/nvim.png)
+![nvim](../../assets/nvim.png)
 
 ## plugins
 
