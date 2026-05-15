@@ -159,6 +159,15 @@ return {
 			{ "<leader>op", "<cmd>Octo pr list<cr>", desc = "GitHub: pull requests" },
 			{ "<leader>oi", "<cmd>Octo issue list<cr>", desc = "GitHub: issues" },
 			{ "<leader>on", "<cmd>Octo notification list<cr>", desc = "GitHub: notifications" },
+			{
+				"<leader>or",
+				function()
+					local r = require("octo.config").values.default_remote
+					r[1], r[2] = r[2], r[1]
+					vim.notify("Octo default remote -> " .. r[1])
+				end,
+				desc = "GitHub: toggle fork/upstream",
+			},
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
