@@ -139,6 +139,9 @@
   "themes": [
     "+themes/vesper.json"
   ],
+  "extensions": [
+    "+extensions/pi-startup-header.ts"
+  ],
   "retry": {
     "enabled": true
   },
@@ -157,6 +160,6 @@
     "-prompts/commit-msg.md",
     "-prompts/pr-review.md"
   ],
-  "quietStartup": false,
+  "quietStartup": true,
   "collapseChangelog": false
 }
