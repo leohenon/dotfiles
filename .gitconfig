@@ -1,0 +1,33 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = leohenon
+	email = 77656081+lhenon999@users.noreply.github.com
+[init]
+	defaultBranch = master
+[http]
+	version = HTTP/1.1
+[diff]
+	tool = vimdiff
+	colorMoved = default
+[difftool "bc"]
+	cmd = bcompare \"\" \"\"
+[difftool]
+	prompt = false
+[difftool "vimdiff"]
+	cmd = vim -d \"\" \"\"
+[include]
+	path = ~/.config/delta/gitconfig
+[merge]
+	conflictstyle = zdiff3
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+	width = variable
