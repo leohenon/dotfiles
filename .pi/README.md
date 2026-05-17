@@ -25,6 +25,7 @@ pi config lives here at `.pi/agent/` and is rsynced to `~/.pi/agent/` by `script
 - `git:github.com/leohenon/my-pi-statusline`
 - `git:github.com/leohenon/pi-vim@vim-status-bar`
 - `npm:@haispeed/pi-obsidian`
+- `npm:pi-interactive-shell`
 
 ## Skills
 

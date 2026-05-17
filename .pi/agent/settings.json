@@ -134,7 +134,8 @@
         "+index.ts"
       ]
     },
-    "npm:@haispeed/pi-obsidian"
+    "npm:@haispeed/pi-obsidian",
+    "npm:pi-interactive-shell"
   ],
   "themes": [
     "+themes/vesper.json"
