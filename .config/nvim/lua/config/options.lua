@@ -16,6 +16,8 @@ vim.opt.splitbelow = true
 vim.opt.wrap = false
 vim.opt.linebreak = true -- When wrapping, break at word boundaries instead of mid-word.
 
+local ruler_default_visible = false
+
 local function ruler_state_path()
   return vim.fn.stdpath("state") .. "/ruler_state.json"
 end
@@ -24,12 +26,12 @@ local function read_ruler_state()
   local path = ruler_state_path()
   local ok, lines = pcall(vim.fn.readfile, path)
   if not ok or not lines or #lines == 0 then
-    return false
+    return ruler_default_visible
   end
 
   local ok_json, decoded = pcall(vim.json.decode, table.concat(lines, "\n"))
   if not ok_json or type(decoded) ~= "table" then
-    return false
+    return ruler_default_visible
   end
 
   return decoded.visible == true
@@ -45,7 +47,7 @@ local function apply_ruler_state()
   vim.opt.colorcolumn = vim.g.ruler_visible and "120" or ""
 end
 
-vim.g.ruler_visible = read_ruler_state()
+vim.g.ruler_visible = ruler_default_visible
 
 vim.api.nvim_create_user_command("ToggleRuler", function()
   vim.g.ruler_visible = not vim.g.ruler_visible
@@ -163,18 +165,62 @@ do
   vim.opt.undodir = undo_dir
 end
 
+local cursorcolumn_default_visible = false
+
+local function cursorcolumn_state_path()
+  return vim.fn.stdpath("state") .. "/cursorcolumn_state.json"
+end
+
+local function read_cursorcolumn_state()
+  local ok, lines = pcall(vim.fn.readfile, cursorcolumn_state_path())
+  if not ok or not lines or #lines == 0 then
+    return cursorcolumn_default_visible
+  end
+
+  local ok_json, decoded = pcall(vim.json.decode, table.concat(lines, "\n"))
+  if not ok_json or type(decoded) ~= "table" then
+    return cursorcolumn_default_visible
+  end
+
+  return decoded.visible == true
+end
+
+local function write_cursorcolumn_state(visible)
+  local path = cursorcolumn_state_path()
+  pcall(vim.fn.mkdir, vim.fn.fnamemodify(path, ":h"), "p")
+  vim.fn.writefile({ vim.json.encode({ visible = visible == true }) }, path)
+end
+
+vim.g.cursorcolumn_visible = read_cursorcolumn_state()
+vim.opt.cursorcolumn = vim.g.cursorcolumn_visible
+
+vim.api.nvim_create_user_command("ToggleCursorColumn", function()
+  vim.g.cursorcolumn_visible = not vim.g.cursorcolumn_visible
+  vim.wo.cursorcolumn = vim.g.cursorcolumn_visible
+  write_cursorcolumn_state(vim.g.cursorcolumn_visible)
+end, { desc = "Toggle vertical cursor column" })
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = vim.api.nvim_create_augroup("PersistCursorColumnState", { clear = true }),
+  callback = function()
+    write_cursorcolumn_state(vim.g.cursorcolumn_visible)
+  end,
+})
+
 do
   local group = vim.api.nvim_create_augroup("ActiveWindowCursorline", { clear = true })
   vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
     group = group,
     callback = function()
       vim.opt_local.cursorline = true
+      vim.opt_local.cursorcolumn = vim.g.cursorcolumn_visible
     end,
   })
   vim.api.nvim_create_autocmd("WinLeave", {
     group = group,
     callback = function()
       vim.opt_local.cursorline = false
+      vim.opt_local.cursorcolumn = false
     end,
   })
 end
