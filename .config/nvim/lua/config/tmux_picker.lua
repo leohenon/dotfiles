@@ -17,19 +17,44 @@ function M.setup()
 	if not pane or vim.fn.executable("tmux") == 0 then
 		return
 	end
+	local registration_job
+	local register_pending = false
+	local leaving = false
 	local function register()
+		if leaving then
+			return
+		end
+		if registration_job then
+			register_pending = true
+			return
+		end
 		local server = vim.v.servername
 		if server == "" then
 			server = vim.fn.serverstart()
 		end
 		local registration = vim.json.encode({ server = server, pid = vim.fn.getpid() })
-		vim.fn.system({ "tmux", "set-option", "-p", "-t", pane, "@picker-nvim", registration })
+		registration_job = vim.system(
+			{ "tmux", "set-option", "-p", "-t", pane, "@picker-nvim", registration },
+			{},
+			vim.schedule_wrap(function()
+				registration_job = nil
+				if register_pending and not leaving then
+					register_pending = false
+					register()
+				end
+			end)
+		)
 	end
 	local group = vim.api.nvim_create_augroup("TmuxPathPicker", { clear = true })
 	vim.api.nvim_create_autocmd({ "VimEnter", "VimResume" }, { group = group, callback = register })
 	vim.api.nvim_create_autocmd("VimLeavePre", {
 		group = group,
 		callback = function()
+			leaving = true
+			-- Finish registration before checking ownership and removing it.
+			if registration_job then
+				registration_job:wait()
+			end
 			local server = vim.fn.system({ "tmux", "show-options", "-pqv", "-t", pane, "@picker-nvim" })
 			local ok, registration = pcall(vim.json.decode, server)
 			if ok and registration.pid == vim.fn.getpid() then

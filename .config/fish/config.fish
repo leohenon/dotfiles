@@ -91,7 +91,7 @@ if status is-interactive
     bind -M insert \ce 'fe; commandline -f repaint'
     bind -M insert \cs 'fs; commandline -f repaint'
     bind -M insert \cg edit_command_buffer
-    if set -q TMUX_PANE
+    if set -q TMUX_PANE; and not set -q NVIM
         bind -M insert \cx\co _tmux_picker_open
         bind -M default \cx\co _tmux_picker_open
     end

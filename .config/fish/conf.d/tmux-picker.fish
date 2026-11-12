@@ -1,5 +1,5 @@
-# Universal tmux picker integration; only active in interactive tmux shells.
-if status is-interactive; and set -q TMUX_PANE
+# Embedded Neovim shells inherit the outer pane but must not register as its shell.
+if status is-interactive; and set -q TMUX_PANE; and not set -q NVIM
     function _tmux_picker_ready --on-event fish_prompt
         command tmux set-option -p -t "$TMUX_PANE" @picker-shell-ready $fish_pid 2>/dev/null
     end
