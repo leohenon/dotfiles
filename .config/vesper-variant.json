@@ -1,0 +1,19 @@
+{
+  "mode": "light",
+  "terminalBg": "#F4F0E8",
+  "panelBg": "#E7E0D6",
+  "panelAlt": "#DDD4C8",
+  "panelFg": "#24201D",
+  "muted": "#6F6860",
+  "border": "#C8BDAF",
+  "darkText": "#F4F0E8",
+  "accent": "#9A5A2E",
+  "accent2": "#B86B35",
+  "blue": "#4A5F9E",
+  "cyan": "#2F7669",
+  "green": "#4F7A39",
+  "red": "#B34A43",
+  "yellow": "#8A671E",
+  "purple": "#6E579E",
+  "dim": "#8A8178"
+}

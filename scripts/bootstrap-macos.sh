@@ -53,6 +53,19 @@ fi
 backup_if_exists "$HOME/.config/theme.json"
 cp -a "$repo_root/.config/theme.json" "$HOME/.config/theme.json"
 
+for file in theme vesper-variant.json; do
+	if [[ -e "$repo_root/.config/$file" ]]; then
+		backup_if_exists "$HOME/.config/$file"
+		cp -a "$repo_root/.config/$file" "$HOME/.config/$file"
+	fi
+done
+
+if [[ -f "$HOME/.config/theme" ]]; then
+	chmod +x "$HOME/.config/theme"
+	mkdir -p "$HOME/.local/bin"
+	ln -sf "$HOME/.config/theme" "$HOME/.local/bin/theme"
+fi
+
 for command_name in ai-usage ai-tokens ai-status; do
 	command_path="$HOME/.config/shell/$command_name/$command_name.mjs"
 	if [[ -f "$command_path" ]]; then

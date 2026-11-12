@@ -1,3 +1,25 @@
+local function vesper_variant()
+	local fallback = {
+		panelBg = "#161616",
+		panelFg = "#FEFEFE",
+		muted = "#A0A0A0",
+		darkText = "#101010",
+	}
+	local path = vim.fn.expand("~/.config/vesper-variant.json")
+	if vim.fn.filereadable(path) ~= 1 then
+		return fallback
+	end
+
+	local ok, decoded = pcall(function()
+		return vim.fn.json_decode(table.concat(vim.fn.readfile(path), "\n"))
+	end)
+	if not ok or type(decoded) ~= "table" then
+		return fallback
+	end
+
+	return vim.tbl_extend("force", fallback, decoded)
+end
+
 local function lualine_filename()
 	local name = vim.api.nvim_buf_get_name(0)
 	if name == "" then
@@ -50,14 +72,15 @@ local function lualine_ahead_behind()
 end
 
 local function lualine_theme()
-  local bg = "#161616"
-  local fg = "#FEFEFE"
-  local muted = "#A0A0A0"
+  local variant = vesper_variant()
+  local bg = variant.panelBg
+  local fg = variant.panelFg
+  local muted = variant.muted
   local mint = "#99FFE4"
   local orange = "#FFCFA8"
   local white = "#FEFEFE"
   local red = "#FF8080"
-  local dark = "#101010"
+  local dark = variant.darkText
 
   return {
     normal = {
@@ -148,12 +171,14 @@ return {
     },
     config = function(_, opts)
       local lualine = require("lualine")
+      opts.options.theme = lualine_theme()
       lualine.setup(opts)
 
       local group = vim.api.nvim_create_augroup("LualineRefresh", { clear = true })
       vim.api.nvim_create_autocmd("ColorScheme", {
         group = group,
         callback = function()
+          opts.options.theme = lualine_theme()
           lualine.setup(opts)
           lualine.refresh({ place = { "statusline" } })
         end,

@@ -1,0 +1,314 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-}"
+config_dir="$HOME/.config"
+variant_file="$config_dir/vesper-variant.json"
+ghostty_config="$config_dir/ghostty/config"
+tmux_config="$config_dir/tmux/tmux.conf"
+pi_theme="$HOME/.pi/agent/themes/vesper.json"
+
+case "$mode" in
+  dark)
+    terminal_bg="#101010"
+    panel_bg="#161616"
+    panel_alt="#1b1b1b"
+    panel_fg="#FEFEFE"
+    muted="#A0A0A0"
+    border="#2A2A2A"
+    dark_text="#101010"
+    accent="#ffc799"
+    accent2="#ff9e64"
+    blue="#99b3ff"
+    cyan="#99ffe4"
+    green="#a8cc8c"
+    red="#f28779"
+    yellow="#f2ca7d"
+    purple="#d4bfff"
+    dim="#6b6b6b"
+    ;;
+  bright)
+    mode="bright"
+    terminal_bg="#343434"
+    panel_bg="#303030"
+    panel_alt="#343434"
+    panel_fg="#FEFEFE"
+    muted="#B0B0B0"
+    border="#505050"
+    dark_text="#242424"
+    accent="#ffc799"
+    accent2="#ff9e64"
+    blue="#99b3ff"
+    cyan="#99ffe4"
+    green="#a8cc8c"
+    red="#f28779"
+    yellow="#f2ca7d"
+    purple="#d4bfff"
+    dim="#6b6b6b"
+    ;;
+  brighter)
+    mode="brighter"
+    terminal_bg="#3A3A3A"
+    panel_bg="#343434"
+    panel_alt="#383838"
+    panel_fg="#FEFEFE"
+    muted="#B8B8B8"
+    border="#6A625A"
+    dark_text="#242424"
+    accent="#ffc799"
+    accent2="#ff9e64"
+    blue="#99b3ff"
+    cyan="#99ffe4"
+    green="#a8cc8c"
+    red="#f28779"
+    yellow="#f2ca7d"
+    purple="#d4bfff"
+    dim="#6b6b6b"
+    ;;
+  light|white)
+    mode="light"
+    terminal_bg="#F4F0E8"
+    panel_bg="#E7E0D6"
+    panel_alt="#DDD4C8"
+    panel_fg="#24201D"
+    muted="#6F6860"
+    border="#C8BDAF"
+    dark_text="#F4F0E8"
+    accent="#9A5A2E"
+    accent2="#B86B35"
+    blue="#4A5F9E"
+    cyan="#2F7669"
+    green="#4F7A39"
+    red="#B34A43"
+    yellow="#8A671E"
+    purple="#6E579E"
+    dim="#8A8178"
+    ;;
+  status)
+    if [[ -f "$variant_file" ]]; then
+      cat "$variant_file"
+    else
+      echo "No variant file at $variant_file" >&2
+      exit 1
+    fi
+    exit 0
+    ;;
+  *)
+    cat >&2 <<EOF
+Usage: theme dark|bright|brighter|light|status
+
+  dark      Vesper default: terminal #101010, panel #161616
+  bright    Bright-room Vesper: terminal #343434, panel #303030
+  brighter  Brighter-room Vesper: terminal #3A3A3A, panel #343434
+  light     Vesper-inspired light mode: terminal #F4F0E8, panel #E7E0D6
+  status    Print current shared palette
+EOF
+    exit 2
+    ;;
+esac
+
+cat > "$variant_file" <<EOF
+{
+  "mode": "$mode",
+  "terminalBg": "$terminal_bg",
+  "panelBg": "$panel_bg",
+  "panelAlt": "$panel_alt",
+  "panelFg": "$panel_fg",
+  "muted": "$muted",
+  "border": "$border",
+  "darkText": "$dark_text",
+  "accent": "$accent",
+  "accent2": "$accent2",
+  "blue": "$blue",
+  "cyan": "$cyan",
+  "green": "$green",
+  "red": "$red",
+  "yellow": "$yellow",
+  "purple": "$purple",
+  "dim": "$dim"
+}
+EOF
+
+if [[ -f "$ghostty_config" ]]; then
+  python3 - "$ghostty_config" "$terminal_bg" "$panel_fg" "$panel_alt" "$panel_fg" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+bg = sys.argv[2]
+fg = sys.argv[3]
+selection_bg = sys.argv[4]
+selection_fg = sys.argv[5]
+text = path.read_text()
+
+if re.search(r'^theme\s*=\s*".*"\s*$', text, flags=re.M):
+    text = re.sub(r'^theme\s*=\s*".*"\s*$', 'theme = "Vesper"', text, count=1, flags=re.M)
+else:
+    text += '\ntheme = "Vesper"\n'
+
+if re.search(r'^background\s*=\s*#?[0-9A-Fa-f]{6}\s*$', text, flags=re.M):
+    text = re.sub(r'^background\s*=\s*#?[0-9A-Fa-f]{6}\s*$', f'background = {bg}', text, count=1, flags=re.M)
+else:
+    text += f'background = {bg}\n'
+
+if re.search(r'^background-opacity\s*=.*$', text, flags=re.M):
+    text = re.sub(r'^background-opacity\s*=.*$', 'background-opacity = 1', text, count=1, flags=re.M)
+else:
+    text += 'background-opacity = 1\n'
+
+for key, value in {
+    'foreground': fg,
+    'selection-background': selection_bg,
+    'selection-foreground': selection_fg,
+}.items():
+    pattern = rf'^{re.escape(key)}\s*=\s*#?[0-9A-Fa-f]{{6}}\s*$'
+    replacement = f'{key} = {value}'
+    if re.search(pattern, text, flags=re.M):
+        text = re.sub(pattern, replacement, text, count=1, flags=re.M)
+    else:
+        text += f'{replacement}\n'
+
+path.write_text(text)
+PY
+fi
+
+if [[ -f "$pi_theme" ]]; then
+  python3 - "$pi_theme" "$terminal_bg" "$panel_bg" "$panel_alt" "$panel_fg" "$muted" "$border" "$accent" "$accent2" "$blue" "$cyan" "$green" "$red" "$yellow" "$purple" "$dim" <<'PY'
+from pathlib import Path
+import json
+import sys
+
+path = Path(sys.argv[1])
+(
+    terminal_bg, panel_bg, panel_alt, panel_fg, muted, border,
+    accent, accent2, blue, cyan, green, red, yellow, purple, dim,
+) = sys.argv[2:17]
+
+data = json.loads(path.read_text())
+vars_ = data.setdefault("vars", {})
+colors = data.setdefault("colors", {})
+export = data.setdefault("export", {})
+
+vars_.update({
+    "bg": terminal_bg,
+    "panel": panel_bg,
+    "panelAlt": panel_alt,
+    "selection": panel_alt,
+    "fg": panel_fg,
+    "muted": muted,
+    "border": border,
+    "accent": accent,
+    "accent2": accent2,
+    "blue": blue,
+    "cyan": cyan,
+    "green": green,
+    "red": red,
+    "yellow": yellow,
+    "purple": purple,
+    "dim": dim,
+})
+
+# Keep these as aliases where possible so future palette edits propagate.
+colors.update({
+    "accent": "accent",
+    "border": "border",
+    "borderAccent": "accent",
+    "borderMuted": "border",
+    "selectedBg": "selection",
+    "userMessageBg": "panel",
+    "userMessageText": "fg",
+    "customMessageBg": "panelAlt",
+    "customMessageText": "fg",
+    "toolPendingBg": "panelAlt",
+    "toolSuccessBg": "panel",
+    "toolOutput": "muted",
+    "text": "fg",
+    "muted": "muted",
+    "thinkingOff": "border",
+    "thinkingMinimal": "border",
+    "thinkingLow": "accent",
+    "thinkingMedium": "accent",
+    "thinkingHigh": "accent2",
+    "thinkingXhigh": "accent2",
+    "bashMode": "green",
+    "success": "green",
+    "error": "red",
+    "warning": "yellow",
+    "dim": "dim",
+    "mdHeading": "accent2",
+    "mdLink": "blue",
+    "mdLinkUrl": "dim",
+    "mdCode": "accent",
+    "mdCodeBlock": "green",
+    "mdQuote": "muted",
+    "mdListBullet": "accent",
+    "toolDiffAdded": "green",
+    "toolDiffRemoved": "red",
+    "toolDiffContext": "muted",
+    "syntaxComment": "dim",
+    "syntaxKeyword": "accent2",
+    "syntaxFunction": "accent",
+    "syntaxVariable": "fg",
+    "syntaxString": "cyan",
+    "syntaxNumber": "purple",
+    "syntaxType": "blue",
+    "syntaxOperator": "accent2",
+    "syntaxPunctuation": "muted",
+})
+
+export.update({
+    "pageBg": terminal_bg,
+    "cardBg": panel_bg,
+})
+
+path.write_text(json.dumps(data, indent=2) + "\n")
+PY
+fi
+
+if [[ -f "$tmux_config" ]]; then
+  python3 - "$tmux_config" "$panel_bg" "$panel_fg" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+bg = sys.argv[2]
+fg = sys.argv[3]
+text = path.read_text()
+
+replacements = [
+    (r'^(set -g status-style )"bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}"$', f'\\1"bg={bg},fg={fg}"'),
+    (r'^(set -g status-left ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
+    (r'^(setw -g window-status-format ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
+    (r'^(setw -g window-status-current-format ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
+]
+
+for pattern, replacement in replacements:
+    text = re.sub(pattern, replacement, text, flags=re.M)
+
+text = re.sub(
+    r'(#\[bg=)#[0-9A-Fa-f]{6}(,fg=#[0-9A-Fa-f]{6}\])',
+    rf'\1{bg}\2',
+    text,
+)
+text = re.sub(
+    r'(#\[bg=#[0-9A-Fa-f]{6},fg=)#[0-9A-Fa-f]{6}(\])',
+    rf'\1{fg}\2',
+    text,
+)
+
+path.write_text(text)
+PY
+fi
+
+if [[ -n "${TMUX:-}" ]] && command -v tmux >/dev/null 2>&1; then
+  tmux set -g status-style "bg=$panel_bg,fg=$panel_fg" \; \
+    set -g status-left "#[bg=$panel_bg,fg=$panel_fg] [#S] " \; \
+    setw -g window-status-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
+    setw -g window-status-current-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
+    set -g status-right "#[bg=$panel_bg,fg=$panel_fg] \"#(~/.config/tmux/scripts/short-path.sh #{q:pane_current_path} 36)\" #[bg=$panel_bg,fg=$panel_fg] %H:%M:%S "
+fi
+
+printf 'Switched to %s: terminal %s, panel/status %s\n' "$mode" "$terminal_bg" "$panel_bg"
+printf 'Reload Ghostty config if it does not update automatically. Restart pi once for the statusline code change; after that, switching reads %s dynamically.\n' "$variant_file"

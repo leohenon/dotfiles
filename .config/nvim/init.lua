@@ -38,10 +38,28 @@ vim.opt.guicursor = table.concat({
   "a:blinkon0",
 }, ",")
 
+local function theme_color(name, fallback)
+  local ok, lines = pcall(vim.fn.readfile, vim.fn.expand("~/.config/vesper-variant.json"))
+  if not ok or #lines == 0 then
+    return fallback
+  end
+
+  local decoded_ok, palette = pcall(vim.json.decode, table.concat(lines, "\n"))
+  if decoded_ok and type(palette) == "table" and type(palette[name]) == "string" then
+    return palette[name]
+  end
+
+  return fallback
+end
+
 local function apply_ui_hl()
   vim.api.nvim_set_hl(0, "Cursor", { reverse = true })
   vim.api.nvim_set_hl(0, "lCursor", { reverse = true })
   vim.api.nvim_set_hl(0, "TermCursor", { reverse = true })
+  local cursorline_bg = theme_color("mode", "") == "brighter" and "#484848"
+    or theme_color("border", "#343434")
+  vim.api.nvim_set_hl(0, "CursorLine", { bg = cursorline_bg })
+  vim.api.nvim_set_hl(0, "CursorColumn", { link = "CursorLine" })
 
   vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = "#00c853" })
   vim.api.nvim_set_hl(0, "GitSignsChange", { fg = "#ffd54f" })
@@ -60,5 +78,9 @@ end
 apply_ui_hl()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = apply_ui_hl,
+})
+
+vim.api.nvim_create_autocmd("FocusGained", {
   callback = apply_ui_hl,
 })
