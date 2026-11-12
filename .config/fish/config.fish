@@ -112,6 +112,17 @@ if status is-interactive
         command git branch --sort=-committerdate --format='%(committerdate:relative)  %(refname:short)' $argv
     end
 
+    function fb --description 'Fuzzy switch git branch'
+        command git rev-parse --is-inside-work-tree >/dev/null 2>&1; or return
+        command -q fzf; or begin
+            echo 'fzf is not installed'
+            return 1
+        end
+
+        set -l branch (command git branch --sort=-committerdate --format='%(refname:short)' | fzf --prompt='branch> ')
+        test -n "$branch"; and command git switch "$branch"
+    end
+
     function g --description 'Google search in browser'
         if test (count $argv) -eq 0
             echo 'usage: g search terms'
