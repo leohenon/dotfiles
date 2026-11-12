@@ -84,6 +84,7 @@ if status is-interactive
     end
 
     fish_vi_key_bindings
+    bind -M visual -m default y fish_clipboard_copy fish_vi_yank_selection end-selection repaint-mode
     bind -M insert \t accept-autosuggestion
     bind -M insert \e\t complete
     bind -M insert \cf 'fp; commandline -f repaint'
