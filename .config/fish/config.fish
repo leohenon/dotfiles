@@ -103,18 +103,6 @@ if status is-interactive
         end < $abbr_file
     end
 
-    function ds --description 'Delta side-by-side diff'
-        command ~/.config/delta/delta-diff $argv
-    end
-
-    function dsa --description 'Delta side-by-side diff including untracked files'
-        command ~/.config/delta/delta-diff --intent-to-add $argv
-    end
-
-    function dss --description 'Delta side-by-side staged diff'
-        command ~/.config/delta/delta-diff --staged $argv
-    end
-
     function g --description 'Google search in browser'
         if test (count $argv) -eq 0
             echo 'usage: g search terms'

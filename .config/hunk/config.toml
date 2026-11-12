@@ -1,0 +1,12 @@
+theme = "custom"
+menu_bar = false
+cursor_line = "off"
+
+[custom_theme]
+base = "vesper"
+background = "#101010"
+panel = "#101010"
+panelAlt = "#101010"
+contextBg = "#101010"
+contextContentBg = "#101010"
+lineNumberBg = "#101010"

@@ -28,7 +28,7 @@ brew bundle --file "$repo_root/Brewfile"
 
 mkdir -p "$HOME/.config"
 
-for app in bat delta fish ghostty karabiner nvim raycast shell tmux zsh; do
+for app in bat fish ghostty hunk karabiner nvim raycast shell tmux zsh; do
 	backup_if_exists "$HOME/.config/$app"
 	rm -rf "$HOME/.config/$app"
 	cp -a "$repo_root/.config/$app" "$HOME/.config/$app"
@@ -39,11 +39,11 @@ if command -v bat >/dev/null 2>&1; then
 fi
 
 if command -v git >/dev/null 2>&1; then
-	delta_gitconfig="$HOME/.config/delta/gitconfig"
-	if ! git config --global --get-all include.path | grep -Fxq "$delta_gitconfig" && \
-		! git config --global --get-all include.path | grep -Fxq "~/.config/delta/gitconfig"; then
-		git config --global --add include.path "$delta_gitconfig"
-	fi
+	for old_include in "$HOME/.config/delta/gitconfig" "~/.config/delta/gitconfig"; do
+		if git config --global --get-all include.path | grep -Fxq "$old_include"; then
+			git config --global --fixed-value --unset-all include.path "$old_include"
+		fi
+	done
 fi
 
 backup_if_exists "$HOME/.config/theme.json"

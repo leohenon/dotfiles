@@ -19,6 +19,8 @@ gpf	git push --force-with-lease
 gpl	git pull --rebase
 gd	git diff
 gds	git diff --staged
+hd	hunk diff
+hds	hunk diff --staged
 gst	git stash
 gsp	git stash push --staged
 gsa	git stash apply

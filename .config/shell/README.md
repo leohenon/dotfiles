@@ -1,7 +1,5 @@
-# shell
+# Shell
 
-Shared shell data.
+Abbreviations: `.config/shell/abbrs.tsv`
 
-Files:
-
-- `abbrs.tsv` shared abbreviations for fish and zsh
+Tools: `ai-usage/`, `ai-tokens/`, `ai-status/`

@@ -1,12 +1,5 @@
-# fish
+# Fish
 
-![fish-prompt](assets/prompt.png)
+`.config/fish/config.fish`
 
-Helpers:
-
-- `fe` fzf file picker into `nvim`
-- `fv` fzf directory picker into `nvim`
-- `fp` fzf directory picker into tmux
-- `fs` fzf tmux session picker
-- `ff` fzf fast file search
-- `ga` (gstage) / `gu` (gunstage) git fzf helpers
+Functions: `.config/fish/functions/`

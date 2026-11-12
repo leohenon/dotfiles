@@ -1,5 +1,5 @@
-# raycast
+# Raycast
 
-Scripts live in `scripts/`.
+`.config/raycast/scripts/`
 
-Bootstrap copies these files to `~/.config/raycast`, but Raycast setup is still manual.
+Add the script directory in Raycast manually.
