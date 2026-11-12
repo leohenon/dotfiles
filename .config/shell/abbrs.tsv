@@ -56,10 +56,10 @@ md	mkdir -p
 rd	rmdir
 bunol	bun run --cwd ~/dev/opencode/packages/opencode dev
 opl	~/.config/run_opencode_dev.sh
-f	find . -name
+f	ff
 rg	rg --hidden
 grep	grep --color=auto
-h	history
+h	hunk diff
 psg	ps aux | grep -v grep | grep
 ports	lsof -i -P -n
 kill9	kill -9
