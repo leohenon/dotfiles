@@ -31,6 +31,10 @@
     "branch": "master",
     "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90"
   },
+  "codediff.nvim": {
+    "branch": "main",
+    "commit": "09d9ebef2cc5a5c04db7a349cd6c61bdf84ecc8e"
+  },
   "conform.nvim": {
     "branch": "master",
     "commit": "619363c30309d29ffa631e67c8183f2a72caa373"
@@ -38,10 +42,6 @@
   "copilot.lua": {
     "branch": "master",
     "commit": "1d457ad5f267b8ef855a6b8b3fe152403cb00947"
-  },
-  "diffview.nvim": {
-    "branch": "main",
-    "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a"
   },
   "friendly-snippets": {
     "branch": "main",
@@ -78,10 +78,6 @@
   "mason.nvim": {
     "branch": "main",
     "commit": "16ba83bfc8a25f52bb545134f5bee082b195c460"
-  },
-  "neogit": {
-    "branch": "master",
-    "commit": "9104991a424f5e0891cbe1cb44f91ae22cef28a0"
   },
   "neominimap.nvim": {
     "branch": "main",
@@ -166,6 +162,10 @@
   "vesper": {
     "branch": "main",
     "commit": "1717b1ad657c94bec3fc2bdebb0c55452d9fe46d"
+  },
+  "vim-fugitive": {
+    "branch": "master",
+    "commit": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0"
   },
   "vim-tmux-navigator": {
     "branch": "master",

@@ -134,234 +134,134 @@ return {
 		},
 	},
 	{
-		"NeogitOrg/neogit",
-		cmd = "Neogit",
-		init = function()
-			local namespace = vim.api.nvim_create_namespace("NeogitDiffstatTotals")
-			local request = 0
-
-			local function get_totals(cwd, staged, callback)
-				local args = { "git", "diff" }
-				if staged then
-					table.insert(args, "--cached")
+		"tpope/vim-fugitive",
+		cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gclog" },
+		keys = {
+			{ "<leader>gs", "<cmd>botright Git<cr>", desc = "Source control (Fugitive)" },
+		},
+		config = function()
+			local function highlights()
+				local groups = {
+					fugitiveHeader = { fg = "#A0A0A0", bold = true },
+					fugitiveHeading = { fg = "#FEFEFE", bold = true },
+					fugitiveStagedHeading = { fg = "#82D9C2", bold = true },
+					fugitiveUnstagedHeading = { fg = "#FFCFA8", bold = true },
+					fugitiveUntrackedHeading = { fg = "#FF8080", bold = true },
+					fugitiveStagedModifier = { fg = "#82D9C2" },
+					fugitiveUnstagedModifier = { fg = "#FFCFA8" },
+					fugitiveUntrackedModifier = { fg = "#FF8080" },
+					fugitiveHash = { fg = "#A0A0A0" },
+					fugitiveSymbolicRef = { fg = "#82D9C2", bold = true },
+					fugitiveCount = { fg = "#A0A0A0" },
+					FugitiveDiffAdded = { fg = "#82D9C2" },
+					FugitiveDiffRemoved = { fg = "#FF8080" },
+					FugitiveDiffLine = { fg = "#FFCFA8" },
+				}
+				for name, value in pairs(groups) do
+					vim.api.nvim_set_hl(0, name, value)
 				end
-				vim.list_extend(args, { "--numstat", "--" })
-
-				vim.system(args, { cwd = cwd, text = true }, function(result)
-					local additions, deletions = 0, 0
-					if result.code == 0 then
-						for line in (result.stdout or ""):gmatch("[^\r\n]+") do
-							local added, deleted = line:match("^(%d+)%s+(%d+)%s+")
-							additions = additions + (tonumber(added) or 0)
-							deletions = deletions + (tonumber(deleted) or 0)
-						end
-					end
-					callback(additions, deletions)
-				end)
 			end
 
-			vim.api.nvim_create_autocmd("User", {
-				group = vim.api.nvim_create_augroup("NeogitDiffstatTotals", { clear = true }),
-				pattern = { "NeogitStatusRefreshed", "NeogitDiffLoaded" },
-				callback = function()
-					request = request + 1
-					local current_request = request
-					local ok, status = pcall(function()
-						return require("neogit.buffers.status").instance()
-					end)
-					if not ok or not status or not status.buffer then
-						return
+			local function clean_window()
+				if not vim.tbl_contains({ "fugitive", "fugitiveblame", "git" }, vim.bo.filetype) then
+					return
+				end
+				vim.opt_local.number = false
+				vim.opt_local.relativenumber = false
+				vim.opt_local.signcolumn = "no"
+				vim.opt_local.list = false
+				vim.opt_local.wrap = false
+				vim.opt_local.spell = false
+				vim.opt_local.cursorline = vim.bo.filetype == "fugitive"
+				vim.opt_local.winhighlight:append({
+					diffAdded = "FugitiveDiffAdded",
+					diffRemoved = "FugitiveDiffRemoved",
+					diffLine = "FugitiveDiffLine",
+				})
+			end
+
+			local group = vim.api.nvim_create_augroup("FugitiveAppearance", { clear = true })
+			vim.api.nvim_create_autocmd("FileType", {
+				group = group,
+				pattern = "fugitive",
+				callback = function(event)
+					for _, key in ipairs({ "<Tab>", "z" }) do
+						vim.keymap.set("n", key, "=", {
+							buffer = event.buf,
+							remap = true,
+							desc = "Toggle inline diff",
+						})
 					end
-
-					local bufnr = status.buffer.handle
-					local cwd = status.root or status.cwd
-					if not vim.api.nvim_buf_is_valid(bufnr) or not cwd then
-						return
-					end
-
-					local totals = {}
-					local pending = 2
-					local function done(kind, additions, deletions)
-						totals[kind] = { additions = additions, deletions = deletions }
-						pending = pending - 1
-						if pending > 0 then
-							return
-						end
-
-						vim.schedule(function()
-							if current_request ~= request or not vim.api.nvim_buf_is_valid(bufnr) then
-								return
-							end
-
-							vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
-							for row, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
-								local kind = line:find("Unstaged changes", 1, true) and "unstaged"
-									or line:find("Staged changes", 1, true) and "staged"
-								local total = kind and totals[kind] or nil
-								if total then
-									vim.api.nvim_buf_set_extmark(bufnr, namespace, row - 1, 0, {
-										virt_text = {
-											{ ("  +%d"):format(total.additions), "NeogitDiffAdditions" },
-											{ (" -%d"):format(total.deletions), "NeogitDiffDeletions" },
-										},
-										virt_text_pos = "eol",
-										hl_mode = "combine",
-									})
-								end
-							end
-						end)
-					end
-
-					get_totals(cwd, false, function(additions, deletions)
-						done("unstaged", additions, deletions)
-					end)
-					get_totals(cwd, true, function(additions, deletions)
-						done("staged", additions, deletions)
-					end)
 				end,
 			})
+			vim.api.nvim_create_autocmd("ColorScheme", { group = group, callback = highlights })
+			vim.api.nvim_create_autocmd("FileType", {
+				group = group,
+				pattern = { "fugitive", "fugitiveblame", "git" },
+				callback = clean_window,
+			})
+			vim.api.nvim_create_autocmd("BufWinEnter", { group = group, callback = clean_window })
+			highlights()
 		end,
-		keys = {
-			{ "<leader>gs", function() require("neogit").open({ kind = "replace" }) end, desc = "Source control (Neogit)" },
-		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"sindrets/diffview.nvim",
-			"nvim-telescope/telescope.nvim",
-		},
-		opts = {
-			kind = "replace",
-			disable_signs = false,
-			disable_context_highlighting = false,
-			mappings = {
-				status = {
-					["<CR>"] = "GoToFile",
-				},
-			},
-			integrations = {
-				diffview = true,
-				telescope = true,
-			},
-		},
 	},
 	{
-		"sindrets/diffview.nvim",
-		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewFocusFiles", "DiffviewToggleFiles" },
+		"esmuellert/codediff.nvim",
+		cmd = { "CodeDiff", "CodeDiffClose" },
 		keys = {
-			{ "<leader>dv", "<cmd>DiffviewOpen<cr>",                                                            desc = "Diff: open (unstaged)" },
-			{ "<leader>dV", "<cmd>DiffviewOpen --staged<cr>",                                                   desc = "Diff: open (staged)" },
-			{ "<leader>dc", "<cmd>DiffviewClose<cr>",                                                           desc = "Diff: close" },
-			{ "<leader>dt", "<cmd>DiffviewToggleFiles<cr>",                                                     desc = "Diff: toggle files panel" },
-			{ "<leader>df", function()
-				vim.g.diffview_single_file = true
-				vim.cmd("DiffviewOpen HEAD -- %")
-			end,                                                                                                desc = "Diff: current file vs HEAD" },
-			{ "<leader>dF", "<cmd>DiffviewFileHistory<cr>",                                                     desc = "Diff: repo history" },
-			{ "<leader>ch", "<cmd>DiffviewFileHistory %<cr>",                                                   desc = "Diff: file history" },
+			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Diff: open (unstaged)" },
+			{ "<leader>dV", "<cmd>CodeDiff --staged<cr>", desc = "Diff: open (staged)" },
+			{ "<leader>dc", "<cmd>CodeDiffClose<cr>", desc = "Diff: close" },
+			{ "<leader>df", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff: current file vs HEAD" },
+			{ "<leader>dF", "<cmd>CodeDiff history<cr>", desc = "Diff: repo history" },
+			{ "<leader>ch", "<cmd>CodeDiff history %<cr>", desc = "Diff: file history" },
 		},
 		opts = {
-			enhanced_diff_hl = true,
+			highlights = {
+				line_insert = "#203A34",
+				line_delete = "#3A2020",
+			},
+			diff = { layout = "side-by-side", filler_text = "╱", compact = true },
 			keymaps = {
 				view = {
-					{ "n", "<leader>e", "<cmd>DiffviewToggleFiles<cr>", { desc = "Toggle the file panel" } },
+					quit = { "q", "<leader>dc" },
+					next_file = { "]f", "<Tab>" },
+					prev_file = { "[f", "<S-Tab>" },
+					toggle_explorer = "<leader>dt",
+					focus_explorer = "<leader>b",
 				},
-				file_panel = {
-					{ "n", "<leader>e", "<cmd>DiffviewToggleFiles<cr>", { desc = "Toggle the file panel" } },
-				},
-				file_history_panel = {
-					{ "n", "<leader>e", "<cmd>DiffviewToggleFiles<cr>", { desc = "Toggle the file panel" } },
-				},
-			},
-			diff_algorithm = "myers",
-			diff_opts = {
-				"--unified=3",
-				"--no-color-moved",
-				"--patience",
-				"--minimal",
-			},
-			view = {
-				default = {
-					layout = "diff2_horizontal",
-				},
-			},
-				hooks = {
-				diff_buf_win_enter = function(bufnr, winid, ctx)
-					if ctx.layout_name:match("^diff2") then
-						if ctx.symbol == "a" then
-							vim.opt_local.winhl = table.concat({
-								"DiffAdd:DiffviewDiffRed",
-								"DiffDelete:DiffviewDiffFiller",
-								"DiffChange:DiffviewDiffRed",
-								"DiffText:DiffviewDiffRed",
-							}, ",")
-						elseif ctx.symbol == "b" then
-							vim.opt_local.winhl = table.concat({
-								"DiffAdd:DiffviewDiffGreen",
-								"DiffDelete:DiffviewDiffFiller",
-								"DiffChange:DiffviewDiffGreen",
-								"DiffText:DiffviewDiffGreen",
-							}, ",")
-						end
-					end
-				end,
-				view_opened = function()
-					if vim.g.diffview_single_file then
-						vim.cmd("DiffviewToggleFiles")
-						vim.g.diffview_single_file = nil
-					end
-
-					vim.opt.fillchars:append({ diff = "╱" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
-					vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
-				end,
 			},
 		},
 		config = function(_, opts)
-			require("diffview").setup(opts)
-
-			local function set_diffview_hl()
-				vim.api.nvim_set_hl(0, "DiffviewDiffRed", { bg = "#3A2020" })
-				vim.api.nvim_set_hl(0, "DiffviewDiffGreen", { bg = "#203A34" })
-				vim.api.nvim_set_hl(0, "DiffviewDiffFiller", { bg = "none", fg = "#6b6b6b" })
-				vim.api.nvim_set_hl(0, "DiffviewFilePanelInsertions", { fg = "#6BB29F", bold = true })
-				vim.api.nvim_set_hl(0, "DiffviewFilePanelDeletions", { fg = "#D16969", bold = true })
-				vim.api.nvim_set_hl(0, "DiffviewStatusAdded", { fg = "#A8CC8C", bold = true })
-				vim.api.nvim_set_hl(0, "DiffviewStatusModified", { fg = "#FFCFA8", bold = true })
-				vim.api.nvim_set_hl(0, "DiffviewStatusDeleted", { fg = "#F28779", bold = true })
-			end
-
-			set_diffview_hl()
-			vim.api.nvim_create_autocmd("ColorScheme", {
-				callback = set_diffview_hl,
-			})
-
-			local group_folds = vim.api.nvim_create_augroup("DiffviewFolds", { clear = true })
-			vim.api.nvim_create_autocmd("FileType", {
-				group = group_folds,
-				pattern = { "DiffviewDiff" },
-				callback = function()
-					vim.opt_local.foldmethod = "manual"
-					vim.opt_local.foldenable = false
-					vim.opt_local.foldlevel = 99
-					vim.opt_local.modifiable = false
-					vim.opt_local.readonly = true
-				end,
-			})
-
-			local group = vim.api.nvim_create_augroup("DiffviewHighlightOverrides", { clear = true })
+			require("codediff").setup(opts)
 			vim.api.nvim_create_autocmd("User", {
-				group = group,
-				pattern = "DiffviewViewOpened",
-				callback = function()
-					if vim.g.diffview_single_file then
-						vim.cmd("DiffviewToggleFiles")
-						vim.g.diffview_single_file = nil
+				group = vim.api.nvim_create_augroup("CodeDiffExplorerToggle", { clear = true }),
+				pattern = "CodeDiffOpen",
+				callback = function(event)
+					local lifecycle = require("codediff.ui.lifecycle")
+					local tab = event.data.tabpage
+					if not lifecycle.get_panel_view(tab) then
+						return
 					end
-
-					set_diffview_hl()
+					lifecycle.set_tab_keymap(tab, "n", "<leader>e", function()
+						local panel = lifecycle.get_panel_view(tab)
+						if not panel then
+							return
+						end
+						local was_hidden = panel.is_hidden
+						require("codediff.ui.explorer").toggle_visibility(panel)
+						if was_hidden and panel.split and vim.api.nvim_win_is_valid(panel.split.winid) then
+							vim.api.nvim_set_current_win(panel.split.winid)
+						end
+					end, { desc = "Toggle files panel (focus when opening)" })
 				end,
 			})
+			vim.api.nvim_create_user_command("CodeDiffClose", function()
+				local lifecycle = require("codediff.ui.lifecycle")
+				local tab = vim.api.nvim_get_current_tabpage()
+				if lifecycle.get_session(tab) then
+					lifecycle.close(tab)
+				end
+			end, { desc = "Close the current CodeDiff tab" })
 		end,
 	},
 	{

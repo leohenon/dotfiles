@@ -124,7 +124,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter", "WinEnter" }, {
   pattern = "*",
   callback = function()
     local ft = vim.bo.filetype
-    if ft ~= "netrw" and not ft:match("^Neogit") and not ft:match("^neogit") then
+    if ft ~= "netrw" then
       return
     end
 
