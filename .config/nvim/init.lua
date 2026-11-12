@@ -26,6 +26,29 @@ vim.api.nvim_create_user_command("Finder", function()
   vim.fn.jobstart({ "open", dir }, { detach = true })
 end, { desc = "Open netrw or current file directory in Finder" })
 
+vim.api.nvim_create_user_command("Grip", function()
+  if vim.bo.filetype ~= "markdown" then
+    vim.notify("Grip requires a Markdown file", vim.log.levels.WARN)
+    return
+  end
+
+  local file = vim.fn.expand("%:p")
+  if file == "" then
+    vim.notify("Save the Markdown file before running Grip", vim.log.levels.WARN)
+    return
+  end
+  if vim.fn.executable("go-grip") == 0 then
+    vim.notify("go-grip is not available on PATH", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd("update")
+  vim.cmd("botright split")
+  vim.cmd("enew")
+  vim.fn.jobstart({ "go-grip", "--host", "127.0.0.1", "--port", "0", file }, { term = true })
+  vim.cmd("startinsert")
+end, { desc = "Preview current Markdown file with go-grip" })
+
 vim.opt.mouse = "a"
 
 vim.api.nvim_create_autocmd("VimEnter", {
