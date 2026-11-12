@@ -20,8 +20,8 @@ font-thicken = false
 # background-opacity = 0.95
 
 # Default selection colors (overridden by theme-switch.sh)
-selection-foreground = #24201D
-selection-background = #DDD4C8
+selection-foreground = #FEFEFE
+selection-background = #1b1b1b
 # ==========================
 # Theme
 # ==========================
@@ -30,7 +30,7 @@ selection-background = #DDD4C8
  # theme = "Catppuccin Macchiato"
 # theme = "Catppuccin Frappe"
 theme = "Vesper"
-background = #F4F0E8
+background = #101010
 background-opacity = 1
 # background = #282828
 # background-opacity = 1
@@ -85,4 +85,4 @@ background-opacity = 1
 # Resize current split (Ctrl+Cmd+[ / ])
 keybind = ctrl+cmd+left_bracket=resize_split:left,25
 keybind = ctrl+cmd+right_bracket=resize_split:right,25
-foreground = #24201D
+foreground = #FEFEFE

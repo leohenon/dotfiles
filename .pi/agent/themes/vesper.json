@@ -2,23 +2,23 @@
   "$schema": "https://raw.githubusercontent.com/badlogic/pi-mono/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
   "name": "vesper",
   "vars": {
-    "bg": "#F4F0E8",
-    "panel": "#E7E0D6",
-    "panelAlt": "#DDD4C8",
+    "bg": "#101010",
+    "panel": "#161616",
+    "panelAlt": "#1b1b1b",
     "panelWarm": "#1f1a18",
-    "selection": "#DDD4C8",
-    "accent": "#9A5A2E",
-    "accent2": "#B86B35",
-    "blue": "#4A5F9E",
-    "cyan": "#2F7669",
-    "green": "#4F7A39",
-    "red": "#B34A43",
-    "yellow": "#8A671E",
-    "purple": "#6E579E",
-    "fg": "#24201D",
-    "muted": "#6F6860",
-    "dim": "#8A8178",
-    "border": "#C8BDAF"
+    "selection": "#1b1b1b",
+    "accent": "#ffc799",
+    "accent2": "#ff9e64",
+    "blue": "#99b3ff",
+    "cyan": "#99ffe4",
+    "green": "#a8cc8c",
+    "red": "#f28779",
+    "yellow": "#f2ca7d",
+    "purple": "#d4bfff",
+    "fg": "#FEFEFE",
+    "muted": "#A0A0A0",
+    "dim": "#6b6b6b",
+    "border": "#2A2A2A"
   },
   "colors": {
     "accent": "accent",
@@ -74,8 +74,8 @@
     "bashMode": "green"
   },
   "export": {
-    "pageBg": "#F4F0E8",
-    "cardBg": "#E7E0D6",
+    "pageBg": "#101010",
+    "cardBg": "#161616",
     "infoBg": "#2a211c"
   }
 }
