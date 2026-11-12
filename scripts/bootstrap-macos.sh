@@ -49,6 +49,16 @@ fi
 backup_if_exists "$HOME/.config/theme.json"
 cp -a "$repo_root/.config/theme.json" "$HOME/.config/theme.json"
 
+for command_name in ai-usage ai-tokens ai-status; do
+	command_path="$HOME/.config/shell/$command_name/$command_name.mjs"
+	if [[ -f "$command_path" ]]; then
+		chmod +x "$command_path"
+		mkdir -p "$HOME/.local/bin"
+		backup_if_exists "$HOME/.local/bin/$command_name"
+		ln -sf "$command_path" "$HOME/.local/bin/$command_name"
+	fi
+done
+
 backup_if_exists "$HOME/.zshrc"
 cp -a "$repo_root/.config/zsh/.zshrc" "$HOME/.zshrc"
 
