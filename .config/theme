@@ -296,47 +296,37 @@ PY
 fi
 
 if [[ -f "$tmux_config" ]]; then
-  python3 - "$tmux_config" "$panel_bg" "$panel_fg" <<'PY'
+  python3 - "$tmux_config" "$panel_bg" "$panel_fg" <<'PYTHON'
 from pathlib import Path
 import re
 import sys
 
 path = Path(sys.argv[1])
-bg = sys.argv[2]
-fg = sys.argv[3]
+bg, fg = sys.argv[2:]
 text = path.read_text()
 
-replacements = [
-    (r'^(set -g status-style )"bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}"$', f'\\1"bg={bg},fg={fg}"'),
-    (r'^(set -g status-left ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
-    (r'^(setw -g window-status-format ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
-    (r'^(setw -g window-status-current-format ")#\[bg=#[0-9A-Fa-f]{6},fg=#[0-9A-Fa-f]{6}\]', f'\\1#[bg={bg},fg={fg}]'),
-]
-
-for pattern, replacement in replacements:
-    text = re.sub(pattern, replacement, text, flags=re.M)
-
-text = re.sub(
-    r'(#\[bg=)#[0-9A-Fa-f]{6}(,fg=#[0-9A-Fa-f]{6}\])',
-    rf'\1{bg}\2',
-    text,
-)
-text = re.sub(
-    r'(#\[bg=#[0-9A-Fa-f]{6},fg=)#[0-9A-Fa-f]{6}(\])',
-    rf'\1{fg}\2',
-    text,
-)
+# Layout belongs to tmux.conf; only update its status color options.
+for option, style in {
+    "status-style": f"bg={bg},fg={fg}",
+    "window-status-style": f"bg=default,fg={fg}",
+    "window-status-current-style": f"bg=default,fg={fg}",
+}.items():
+    text = re.sub(
+        rf'^(set -g {re.escape(option)} )"[^"]*"$',
+        lambda match: match[1] + f'"{style}"',
+        text,
+        flags=re.M,
+    )
 
 path.write_text(text)
-PY
+PYTHON
 fi
 
 if [[ -n "${TMUX:-}" ]] && command -v tmux >/dev/null 2>&1; then
   tmux set -g status-style "bg=$panel_bg,fg=$panel_fg" \; \
-    set -g status-left "#[bg=$panel_bg,fg=$panel_fg] [#S] " \; \
-    setw -g window-status-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
-    setw -g window-status-current-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
-    set -g status-right "#[bg=$panel_bg,fg=$panel_fg] \"#(~/.config/tmux/scripts/short-path.sh #{q:pane_current_path} 36)\" #[bg=$panel_bg,fg=$panel_fg] %I:%M:%S %p "
+    set -g window-status-style "bg=default,fg=$panel_fg" \; \
+    set -g window-status-current-style "bg=default,fg=$panel_fg" \; \
+    refresh-client -S
 fi
 
 printf 'Switched to %s: terminal %s, panel/status %s\n' "$mode" "$terminal_bg" "$panel_bg"
