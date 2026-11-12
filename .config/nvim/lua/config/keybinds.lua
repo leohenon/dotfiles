@@ -264,9 +264,6 @@ vim.api.nvim_create_user_command(
   toggle_buffer_diagnostics,
   { desc = "Diagnostics: toggle (buffer)" }
 )
-vim.api.nvim_create_user_command("Rd", function()
-  cmd("RenderMarkdown toggle")
-end, { desc = "RenderMarkdown: toggle" })
 
 cnoreabbrev("hs", "split")
 cnoreabbrev("hs!", "split!")

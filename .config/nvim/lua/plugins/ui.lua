@@ -228,14 +228,4 @@ return {
     end,
   },
 
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {
-      enabled = false,
-      anti_conceal = { enabled = false },
-      file_types = { "markdown" },
-    },
-  },
 }

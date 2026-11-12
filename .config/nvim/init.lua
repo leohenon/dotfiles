@@ -73,6 +73,27 @@ local function apply_ui_hl()
   vim.api.nvim_set_hl(0, "GitSignsChangeLn", { bg = "#3b3212" })
   vim.api.nvim_set_hl(0, "GitSignsDeleteLn", { bg = "#3b1212" })
 
+  -- Markdown colors only; embedded code keeps its language's syntax colors.
+  local headings = {
+    theme_color("accent", "#FFC799"),
+    theme_color("cyan", "#99FFE4"),
+    theme_color("blue", "#99B3FF"),
+    theme_color("purple", "#D4BFFF"),
+    theme_color("green", "#A8CC8C"),
+    theme_color("yellow", "#F2CA7D"),
+  }
+  for level, color in ipairs(headings) do
+    vim.api.nvim_set_hl(0, "@markup.heading." .. level .. ".markdown", { fg = color, bold = true })
+  end
+  vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { fg = theme_color("blue", "#99B3FF") })
+  vim.api.nvim_set_hl(0, "@markup.link.label.markdown", { fg = theme_color("blue", "#99B3FF") })
+  vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { fg = theme_color("cyan", "#99FFE4"), underline = true })
+  vim.api.nvim_set_hl(0, "@markup.link.url.markdown", { fg = theme_color("cyan", "#99FFE4"), underline = true })
+  vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { fg = theme_color("yellow", "#F2CA7D") })
+  vim.api.nvim_set_hl(0, "@markup.raw.delimiter.markdown", { fg = theme_color("muted", "#B8B8B8") })
+  vim.api.nvim_set_hl(0, "@label.markdown", { fg = theme_color("accent", "#FFC799"), italic = true })
+
+
   require("config.appearance").apply_transparency()
 end
 apply_ui_hl()
