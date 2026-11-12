@@ -123,12 +123,6 @@
       ]
     },
     {
-      "source": "git:github.com/leohenon/my-pi-statusline",
-      "extensions": [
-        "+index.ts"
-      ]
-    },
-    {
       "source": "git:github.com/leohenon/pi-vim@vim-status-bar",
       "extensions": [
         "+index.ts"
@@ -141,7 +135,8 @@
     "+themes/vesper.json"
   ],
   "extensions": [
-    "+extensions/pi-startup-header.ts"
+    "+extensions/pi-startup-header.ts",
+    "+extensions/pi-timestamps-status-only.ts"
   ],
   "retry": {
     "enabled": true
@@ -150,11 +145,6 @@
   "followUpMode": "all",
   "compaction": {
     "enabled": true
-  },
-  "powerline": {
-    "preset": "default",
-    "fixedEditor": false,
-    "vim": true
   },
   "prompts": [
     "-prompts/analyze-issue.md",
