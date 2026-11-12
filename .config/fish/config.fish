@@ -90,6 +90,10 @@ if status is-interactive
     bind -M insert \ce 'fe; commandline -f repaint'
     bind -M insert \cs 'fs; commandline -f repaint'
     bind -M insert \cg 'fv; commandline -f repaint'
+    if set -q TMUX_PANE
+        bind -M insert \cx\co _tmux_picker_open
+        bind -M default \cx\co _tmux_picker_open
+    end
 
     set -l abbr_file "$HOME/.config/shell/abbrs.tsv"
     if test -r $abbr_file

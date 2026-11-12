@@ -5,6 +5,7 @@ require("config.options")
 require("config.keybinds")
 require("config.lazy")
 require("config.project_notes")
+require("config.tmux_picker").setup()
 require("config.appearance").apply()
 pcall(require, "config.local")
 

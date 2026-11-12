@@ -293,6 +293,10 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="$PATH:/Users/leohenon/.local/bin"
 
+if [[ -r "$HOME/.config/zsh/tmux-picker.zsh" ]]; then
+  source "$HOME/.config/zsh/tmux-picker.zsh"
+fi
+
 if [[ -r "$HOME/.config/zsh/local.zsh" ]]; then
   source "$HOME/.config/zsh/local.zsh"
 fi
