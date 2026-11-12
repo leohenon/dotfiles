@@ -16,21 +16,9 @@
       ]
     },
     {
-      "source": "npm:pi-annotate",
-      "extensions": [
-        "+index.ts"
-      ]
-    },
-    {
       "source": "npm:@tintinweb/pi-subagents",
       "extensions": [
         "+src/index.ts"
-      ]
-    },
-    {
-      "source": "git:github.com/leohenon/pi-claude-agent-sdk",
-      "extensions": [
-        "+index.ts"
       ]
     },
     {
@@ -42,10 +30,10 @@
     {
       "source": "git:github.com/v2nic/pi-caveman",
       "extensions": [
-        "+extensions/caveman/index.ts"
+        "-extensions/caveman/index.ts"
       ],
       "skills": [
-        "+skills/caveman/SKILL.md"
+        "-skills/caveman/SKILL.md"
       ]
     },
     {
@@ -63,15 +51,15 @@
     {
       "source": "git:github.com/offline-ant/pi-tmux",
       "extensions": [
-        "+extensions/supervisor.ts",
-        "+extensions/tmux.ts",
-        "+extensions/fork-split.ts"
+        "-extensions/fork-split.ts",
+        "-extensions/supervisor.ts",
+        "-extensions/tmux.ts"
       ]
     },
     {
       "source": "npm:pi-mux",
       "extensions": [
-        "+src/index.ts"
+        "-src/index.ts"
       ]
     },
     {
@@ -81,15 +69,9 @@
       ]
     },
     {
-      "source": "git:github.com/badlogic/pi-telegram",
-      "extensions": [
-        "+index.ts"
-      ]
-    },
-    {
       "source": "npm:pi-whisper",
       "extensions": [
-        "+index.ts"
+        "-index.ts"
       ]
     },
     {
@@ -107,7 +89,7 @@
     {
       "source": "npm:pi-session-summary",
       "extensions": [
-        "+index.ts"
+        "-index.ts"
       ]
     },
     {
@@ -122,20 +104,22 @@
         "+index.ts"
       ]
     },
+    "npm:pi-vim",
     {
-      "source": "git:github.com/leohenon/pi-vim@vim-status-bar",
+      "source": "npm:@haispeed/pi-obsidian",
       "extensions": [
-        "+index.ts"
+        "-extensions/obsidian-cli.ts"
       ]
     },
-    "npm:@haispeed/pi-obsidian",
-    "npm:pi-interactive-shell"
+    "npm:pi-interactive-shell",
+    "npm:pi-codex-image-gen",
+    "npm:pi-diff",
+    "../../dev/pi-copy-session-path"
   ],
   "themes": [
     "+themes/vesper.json"
   ],
   "extensions": [
-    "+extensions/pi-startup-header.ts",
     "+extensions/pi-timestamps-status-only.ts"
   ],
   "retry": {
