@@ -103,6 +103,10 @@ if status is-interactive
         end < $abbr_file
     end
 
+    function gbr --description 'List branches by latest commit'
+        command git branch --sort=-committerdate --format='%(committerdate:relative)  %(refname:short)' $argv
+    end
+
     function g --description 'Google search in browser'
         if test (count $argv) -eq 0
             echo 'usage: g search terms'

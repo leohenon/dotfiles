@@ -7,13 +7,17 @@ gb	git branch
 gba	git branch -a
 gbd	git branch -d
 gcl	git clone
-gc	git commit
+gc	git -c core.editor=nvim commit
 gcm	git commit -m
-gca	git commit --amend
+gca	git -c core.editor=nvim commit --amend
 gco	git checkout
 gcb	git checkout -b
 gl	git log --oneline --graph --decorate
 gp	git push
+gpo	git push origin
+gpu	git push -u HEAD
+gpb	git push -u origin HEAD
+gpsup	git push --set-upstream origin HEAD
 gpsu	git push --set-upstream origin main
 gpf	git push --force-with-lease
 gpl	git pull --rebase
@@ -63,6 +67,7 @@ kill9	kill -9
 myip	curl ifconfig.me
 v	nvim
 vi	nvim
+i	igs --watch
 py	python3
 pip	pip3
 serve	python3 -m http.server
