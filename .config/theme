@@ -307,7 +307,7 @@ if [[ -n "${TMUX:-}" ]] && command -v tmux >/dev/null 2>&1; then
     set -g status-left "#[bg=$panel_bg,fg=$panel_fg] [#S] " \; \
     setw -g window-status-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
     setw -g window-status-current-format "#[bg=$panel_bg,fg=$panel_fg] #I:#{?pane_in_mode,[#W],#W}#{window_flags} " \; \
-    set -g status-right "#[bg=$panel_bg,fg=$panel_fg] \"#(~/.config/tmux/scripts/short-path.sh #{q:pane_current_path} 36)\" #[bg=$panel_bg,fg=$panel_fg] %H:%M:%S "
+    set -g status-right "#[bg=$panel_bg,fg=$panel_fg] \"#(~/.config/tmux/scripts/short-path.sh #{q:pane_current_path} 36)\" #[bg=$panel_bg,fg=$panel_fg] %I:%M:%S %p "
 fi
 
 printf 'Switched to %s: terminal %s, panel/status %s\n' "$mode" "$terminal_bg" "$panel_bg"
