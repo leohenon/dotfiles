@@ -30,6 +30,7 @@ selection-background = #1b1b1b
  # theme = "Catppuccin Macchiato"
 # theme = "Catppuccin Frappe"
 theme = "Vesper"
+cursor-text = #101010
 background = #101010
 background-opacity = 1
 # background = #282828
