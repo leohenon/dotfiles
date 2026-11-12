@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.74.0",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.5",
-  "defaultThinkingLevel": "low",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultThinkingLevel": "medium",
   "hideThinkingBlock": true,
   "theme": "vesper",
   "packages": [
@@ -142,7 +142,7 @@
     "enabled": true
   },
   "steeringMode": "all",
-  "followUpMode": "all",
+  "followUpMode": "one-at-a-time",
   "compaction": {
     "enabled": true
   },
