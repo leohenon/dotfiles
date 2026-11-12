@@ -174,5 +174,6 @@
   "vim-visual-multi": {
     "branch": "master",
     "commit": "a6975e7c1ee157615bbc80fc25e4392f71c344d4"
-  }
+  },
+  "which-key.nvim": {"branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a"}
 }

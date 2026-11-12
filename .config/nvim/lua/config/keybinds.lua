@@ -296,6 +296,7 @@ cnoreabbrev("df", "CodeDiff file HEAD")
 cnoreabbrev("gh", "CodeDiff history %")
 cnoreabbrev("ro", "Root")
 cnoreabbrev("o", "only")
+cnoreabbrev("wt", "WhichKeyToggle")
 
 map("n", "<leader>cd", cmd.Ex)
 map("n", "<leader>j", explore_current_file, { desc = "Explorer (:Ex) on current file" })
