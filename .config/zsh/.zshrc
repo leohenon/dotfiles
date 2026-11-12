@@ -103,28 +103,6 @@ if [[ -o interactive ]]; then
     cd "$selected" && nvim .
   }
 
-  gstage() {
-    git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
-      echo "Not in a git repository"
-      return 1
-    }
-
-    local output
-    output=$(
-      {
-        git diff --name-only
-        git ls-files --others --exclude-standard
-        git ls-files --deleted
-      } | sort -u | fzf -m --prompt='stage > '
-    ) || return 0
-
-    local -a picked
-    picked=("${(@f)output}")
-    (( ${#picked[@]} )) || return 0
-
-    git add -A -- "${picked[@]}"
-  }
-
   gunstage() {
     git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
       echo "Not in a git repository"

@@ -1,5 +1,4 @@
 gs	git status
-ga	gstage
 gss	git status --short
 gu	gunstage
 gaa	git add --all
