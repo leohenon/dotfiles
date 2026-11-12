@@ -1,0 +1,40 @@
+{
+  "overlayWidthPercent": 95,
+  "overlayHeightPercent": 60,
+  "focusShortcut": "alt+shift+f",
+  "spawn": {
+    "defaultAgent": "pi",
+    "shortcut": "alt+shift+p",
+    "commands": {
+      "pi": "pi",
+      "codex": "codex",
+      "claude": "claude",
+      "cursor": "agent"
+    },
+    "defaultArgs": {
+      "pi": [],
+      "codex": [],
+      "claude": [],
+      "cursor": ["--model", "composer-2-fast"]
+    },
+    "worktree": false,
+    "worktreeBaseDir": "../repo-worktrees"
+  },
+  "scrollbackLines": 5000,
+  "exitAutoCloseDelay": 10,
+  "transferLines": 200,
+  "transferMaxChars": 20000,
+  "completionNotifyLines": 50,
+  "completionNotifyMaxChars": 5000,
+  "handsFreeUpdateMode": "on-quiet",
+  "handsFreeUpdateInterval": 60000,
+  "handsFreeQuietThreshold": 8000,
+  "autoExitGracePeriod": 15000,
+  "handsFreeUpdateMaxChars": 1500,
+  "handsFreeMaxTotalChars": 100000,
+  "handoffPreviewEnabled": true,
+  "handoffPreviewLines": 30,
+  "handoffPreviewMaxChars": 2000,
+  "handoffSnapshotEnabled": false,
+  "ansiReemit": true
+}
