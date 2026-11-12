@@ -1,7 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
+    lazy = false,
     build = ":TSUpdate",
     opts = {
       ensure_installed = {
@@ -23,55 +23,22 @@ return {
         "c",
         "cpp",
       },
-      highlight = { enable = true },
-      indent = { enable = true },
-      auto_install = false,
     },
     config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-  },
+      local ts = require("nvim-treesitter")
+      ts.setup({})
+      ts.install(opts.ensure_installed)
 
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {
-      max_lines = 3,
-      trim_scope = "inner",
-      mode = "cursor",
-      separator = "─",
-      zindex = 20,
-    },
-    config = function(_, opts)
-      require("treesitter-context").setup(opts)
-      pcall(function()
-        require("config.appearance").apply_transparency()
-      end)
-
-      local group = vim.api.nvim_create_augroup("TreesitterContextWindowTuning", { clear = true })
-      local function tune_context_windows()
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-          local ok, is_ctx = pcall(function()
-            return vim.w[win].treesitter_context or vim.w[win].treesitter_context_line_number
-          end)
-          if ok and is_ctx then
-            pcall(function()
-              vim.wo[win].winblend = 0
-            end)
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("TreesitterHighlighting", { clear = true }),
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+          if lang and vim.treesitter.language.add(lang) then
+            vim.treesitter.start(args.buf, lang)
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
           end
-        end
-      end
-
-      vim.api.nvim_create_autocmd(
-        { "VimEnter", "WinNew", "WinResized", "WinScrolled", "CursorMoved", "BufEnter" },
-        {
-          group = group,
-          callback = function()
-            tune_context_windows()
-          end,
-        }
-      )
+        end,
+      })
     end,
   },
 }

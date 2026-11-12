@@ -153,10 +153,6 @@ function M.apply_transparency()
     "NoiceCmdlinePopupTitle",
     "NoicePopup",
     "NoicePopupBorder",
-    "TreesitterContext",
-    "TreesitterContextLineNumber",
-    "TreesitterContextSeparator",
-    "TreesitterContextBottom",
   }
 
   for _, group in ipairs(groups) do
