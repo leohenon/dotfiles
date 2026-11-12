@@ -7,17 +7,11 @@
 	name = leohenon
 	email = 77656081+lhenon999@users.noreply.github.com
 [init]
-	defaultBranch = master
-[http]
-	version = HTTP/1.1
+	defaultBranch = main
 [diff]
-	tool = vimdiff
+	tool = nvimdiff
 	colorMoved = default
-[difftool "bc"]
-	cmd = bcompare \"\" \"\"
 [difftool]
 	prompt = false
-[difftool "vimdiff"]
-	cmd = vim -d \"\" \"\"
 [merge]
 	conflictstyle = zdiff3
