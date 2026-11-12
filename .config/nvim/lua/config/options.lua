@@ -14,6 +14,7 @@ vim.opt.fillchars:append({ diff = " " })
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.wrap = false
+vim.opt.linebreak = true -- When wrapping, break at word boundaries instead of mid-word.
 
 local function ruler_state_path()
   return vim.fn.stdpath("state") .. "/ruler_state.json"

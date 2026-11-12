@@ -1,6 +1,14 @@
 local map = vim.keymap.set
 local cmd = vim.cmd
 
+-- Follow wrapped screen lines unless a count was supplied (e.g. 5j).
+map({ "n", "x" }, "j", function()
+  return vim.v.count == 0 and "gj" or "j"
+end, { expr = true, silent = true, desc = "Move down (screen line without count)" })
+map({ "n", "x" }, "k", function()
+  return vim.v.count == 0 and "gk" or "k"
+end, { expr = true, silent = true, desc = "Move up (screen line without count)" })
+
 local function cnoreabbrev(lhs, rhs)
   cmd(
     string.format(
@@ -259,6 +267,14 @@ local function replace_word_under_cursor()
   vim.fn.feedkeys(keys, "n")
 end
 
+local function toggle_window_wrap()
+  local enabled = not vim.wo.wrap
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    vim.wo[win].wrap = enabled
+  end
+  vim.notify("Wrap: " .. (enabled and "on" or "off"))
+end
+
 vim.api.nvim_create_user_command("Root", back_to_startup_cwd, { desc = "CWD: back to startup" })
 vim.api.nvim_create_user_command(
   "ToggleDiagnostics",
@@ -327,6 +343,7 @@ map("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Tab: close" })
 map("n", "<leader>to", "<cmd>tabonly<cr>", { desc = "Tab: only" })
 map("n", "<leader>tl", "<cmd>tabnext<cr>", { desc = "Tab: next" })
 map("n", "<leader>th", "<cmd>tabprevious<cr>", { desc = "Tab: previous" })
+map("n", "<leader>tw", toggle_window_wrap, { desc = "Toggle line wrap" })
 map("n", "<S-Left>", "<cmd>tabprevious<cr>", { desc = "Tab: previous" })
 map("n", "<S-Right>", "<cmd>tabnext<cr>", { desc = "Tab: next" })
 
