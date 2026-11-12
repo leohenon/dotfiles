@@ -150,16 +150,6 @@ if status is-interactive
     set -gx VISUAL nvim
     set -gx EDITOR nvim
 
-    function ng
-        set -l repo_root (command git rev-parse --show-toplevel 2>/dev/null)
-        if test -n "$repo_root"
-            cd "$repo_root"
-            command nvim -c Neogit
-        else
-            command nvim -c Neogit
-        end
-    end
-
     set -gx OPENCODE_ENABLE_EXA 1
 
 end

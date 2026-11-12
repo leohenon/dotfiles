@@ -15,9 +15,6 @@ gl	git log --oneline --graph --decorate
 gp	git push
 gpo	git push origin
 gpu	git push -u HEAD
-gpb	git push -u origin HEAD
-gpsup	git push --set-upstream origin HEAD
-gpsu	git push --set-upstream origin main
 gpf	git push --force-with-lease
 gpl	git pull --rebase
 gd	git diff
@@ -65,8 +62,6 @@ ports	lsof -i -P -n
 kill9	kill -9
 myip	curl ifconfig.me
 v	nvim
-n	ng
-vi	nvim
 i	igs --watch
 py	python3
 pip	pip3
