@@ -16,6 +16,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_user_command("CopyFilePath", function()
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+end, { desc = "Copy current file's absolute path" })
+
+vim.api.nvim_create_user_command("Finder", function()
+  local dir = vim.b.netrw_curdir or vim.fn.expand("%:p:h")
+  vim.fn.jobstart({ "open", dir }, { detach = true })
+end, { desc = "Open netrw or current file directory in Finder" })
+
 vim.opt.mouse = "a"
 
 vim.api.nvim_create_autocmd("VimEnter", {

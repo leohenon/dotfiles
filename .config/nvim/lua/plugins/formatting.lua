@@ -40,6 +40,7 @@ return {
         yaml = { "prettier" },
         c = { "clang_format" },
         cpp = { "clang_format" },
+        zig = { "zigfmt" },
       },
     },
   },

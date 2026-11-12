@@ -270,6 +270,7 @@ vim.api.nvim_create_user_command("NoteIndex", function()
 end, { desc = "Open current project's notes index" })
 
 vim.keymap.set("n", "<leader>nn", "<cmd>NoteIndex<cr>", { desc = "Notes: index (project)" })
+vim.keymap.set("n", "<leader>nv", "<cmd>vsplit | NoteIndex<cr>", { desc = "Notes: index in vertical split" })
 
 vim.keymap.set("n", "<leader>nR", function()
   local key = recent_key()
