@@ -65,6 +65,7 @@ ports	lsof -i -P -n
 kill9	kill -9
 myip	curl ifconfig.me
 v	nvim
+n	ng
 vi	nvim
 i	igs --watch
 py	python3
