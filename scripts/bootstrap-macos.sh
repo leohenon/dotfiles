@@ -66,15 +66,16 @@ if [[ -f "$HOME/.config/theme" ]]; then
 	ln -sf "$HOME/.config/theme" "$HOME/.local/bin/theme"
 fi
 
+# Remove legacy dotfiles links before installing the dedicated package.
 for command_name in ai-usage ai-tokens ai-status; do
-	command_path="$HOME/.config/shell/$command_name/$command_name.mjs"
-	if [[ -f "$command_path" ]]; then
-		chmod +x "$command_path"
-		mkdir -p "$HOME/.local/bin"
-		backup_if_exists "$HOME/.local/bin/$command_name"
-		ln -sf "$command_path" "$HOME/.local/bin/$command_name"
+	command_link="$HOME/.local/bin/$command_name"
+	if [[ -L "$command_link" ]] && \
+		[[ "$(readlink "$command_link")" == "$HOME/.config/shell/$command_name/$command_name.mjs" ]]; then
+		backup_if_exists "$command_link"
+		rm "$command_link"
 	fi
 done
+npm install -g git+https://github.com/leohenon/pi-usage.git
 
 backup_if_exists "$HOME/.zshrc"
 cp -a "$repo_root/.config/zsh/.zshrc" "$HOME/.zshrc"

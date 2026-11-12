@@ -2,4 +2,4 @@
 
 Abbreviations: `.config/shell/abbrs.tsv`
 
-Tools: `ai-usage/`, `ai-tokens/`, `ai-status/`
+AI commands: [pi-usage](https://github.com/leohenon/pi-usage) (installed by bootstrap).
