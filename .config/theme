@@ -65,6 +65,25 @@ case "$mode" in
     purple="#d4bfff"
     dim="#6b6b6b"
     ;;
+  blue)
+    mode="blue"
+    terminal_bg="#101722"
+    panel_bg="#16202D"
+    panel_alt="#1D2938"
+    panel_fg="#FEFEFE"
+    muted="#9AA7B5"
+    border="#33445A"
+    dark_text="#101722"
+    accent="#ffc799"
+    accent2="#ff9e64"
+    blue="#99b3ff"
+    cyan="#99ffe4"
+    green="#a8cc8c"
+    red="#f28779"
+    yellow="#f2ca7d"
+    purple="#d4bfff"
+    dim="#64748B"
+    ;;
   light|white)
     mode="light"
     terminal_bg="#F4F0E8"
@@ -95,17 +114,27 @@ case "$mode" in
     ;;
   *)
     cat >&2 <<EOF
-Usage: theme dark|bright|brighter|light|status
+Usage: theme dark|bright|brighter|blue|light|status
 
   dark      Vesper default: terminal #101010, panel #161616
   bright    Bright-room Vesper: terminal #343434, panel #303030
   brighter  Brighter-room Vesper: terminal #3A3A3A, panel #343434
+  blue      Navy Vesper: terminal #101722, panel #16202D
   light     Vesper-inspired light mode: terminal #F4F0E8, panel #E7E0D6
   status    Print current shared palette
 EOF
     exit 2
     ;;
 esac
+
+# Keep the macOS system appearance in sync with the terminal palette.
+if [[ "$(uname -s)" == "Darwin" ]] && command -v osascript >/dev/null 2>&1; then
+  if [[ "$mode" == "light" ]]; then
+    osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to false'
+  else
+    osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
+  fi
+fi
 
 cat > "$variant_file" <<EOF
 {
