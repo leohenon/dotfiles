@@ -40,6 +40,7 @@ local function explore_current_file()
 end
 
 local function back_to_startup_cwd()
+  startup_cwd = vim.g.startup_cwd or startup_cwd
   cmd.cd(vim.fn.fnameescape(startup_cwd))
 
   local escaped = vim.fn.fnameescape(startup_cwd)
