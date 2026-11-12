@@ -28,11 +28,15 @@ brew bundle --file "$repo_root/Brewfile"
 
 mkdir -p "$HOME/.config"
 
-for app in bat fish ghostty hunk karabiner nvim raycast shell tmux zsh; do
+for app in bat fish ghostty hammerspoon hunk karabiner nvim raycast shell tmux zsh; do
 	backup_if_exists "$HOME/.config/$app"
 	rm -rf "$HOME/.config/$app"
 	cp -a "$repo_root/.config/$app" "$HOME/.config/$app"
 done
+
+backup_if_exists "$HOME/.hammerspoon"
+rm -rf "$HOME/.hammerspoon"
+ln -s "$HOME/.config/hammerspoon" "$HOME/.hammerspoon"
 
 if command -v bat >/dev/null 2>&1; then
 	bat cache --build
