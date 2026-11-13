@@ -103,6 +103,9 @@
       ]
     },
     "npm:pi-diff",
+    "npm:pi-grounded-compaction",
+    "npm:pi-move-session",
+    "npm:pi-model-aware-compaction",
     "../../dev/pi-copy-session-path"
   ],
   "themes": [

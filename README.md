@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal macOS configuration.
+Personal macOS configuration ([nvim](.config/nvim/README.md) · [tmux](.config/tmux/README.md) · [fish](.config/fish/README.md) · [π](.pi/README.md) · [Ghostty](.config/ghostty/README.md) )
 
 ```text
 .config/
@@ -24,7 +24,5 @@ Personal macOS configuration.
 Brewfile
 .gitconfig
 ```
-
-[Neovim](.config/nvim/README.md) · [π](.pi/README.md)
 
 Restore: [`scripts/bootstrap-macos.sh`](scripts/bootstrap-macos.sh) (Replaces live configs)
