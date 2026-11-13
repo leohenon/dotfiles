@@ -226,6 +226,10 @@ do
   })
 end
 
+-- Ignore case in searches unless the pattern contains uppercase letters.
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
 vim.opt.wildignorecase = true
