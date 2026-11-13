@@ -25,6 +25,11 @@ class NavigationTests(unittest.TestCase):
         self.assertIsNone(nav.target_row(anchors, "prompt", "prev", -10))
         self.assertEqual(nav.target_row(anchors, "diff", "next", -10), -5)
 
+    def test_notice_lasts_one_second_without_key_repeat_dismissal(self):
+        with patch.object(nav, "tmux") as command:
+            nav.notify("%0", "No prev prompt")
+            command.assert_called_once_with("display-message", "-N", "-d", "1000", "-t", "%0", "No prev prompt")
+
     def test_invalid_scheme_is_not_an_anchor(self):
         self.assertEqual(nav.parse_anchors("0 \x1b]8;;https://example.com\x07x\x1b]8;;\x07\n"), [])
 
@@ -101,6 +106,78 @@ subprocess.run(["tmux", "wait-for", "finish"])
         nav.jump("%0", "diff", "prev")
         self.assertTrue(self.cursor_line().startswith("row070"))
 
+    def test_navigation_boundaries_notify_once_and_reset(self):
+        self.enter("relative")
+        with patch.object(nav, "notify") as notify:
+            for kind in ("prompt", "diff"):
+                for direction in ("prev", "next"):
+                    notify.reset_mock()
+                    for _ in range(4):
+                        nav.jump("%0", kind, direction)
+                    before = self.cursor_line()
+                    nav.jump("%0", kind, direction)
+                    self.assertEqual(self.cursor_line(), before)
+                    notify.assert_called_once_with("%0", f"No {direction} {kind}")
+            # A successful move rearms the boundary notice.
+            notify.reset_mock()
+            nav.jump("%0", "diff", "prev")
+            nav.jump("%0", "diff", "next")
+            nav.jump("%0", "diff", "next")
+            nav.jump("%0", "diff", "next")
+            notify.assert_called_once_with("%0", "No next diff")
+            # New copy-mode entry rearms notices even for identical history.
+            self.run_tmux("send-keys", "-t", "%0", "-X", "cancel")
+            self.enter("relative")
+            notify.reset_mock()
+            nav.jump("%0", "diff", "next")
+            nav.jump("%0", "diff", "next")
+            notify.assert_called_once_with("%0", "No next diff")
+
+    def test_fast_repeats_do_not_queue_helpers(self):
+        stub = self.directory / "jump.py"
+        log = self.directory / "calls"
+        stub.write_text(
+            "import subprocess, sys\n"
+            f"with open({str(log)!r}, 'a') as f: f.write(' '.join(sys.argv[1:]) + '\\n')\n"
+            "subprocess.run(['tmux', 'wait-for', '-S', 'jump-started'], check=True)\n"
+            "subprocess.run(['tmux', 'wait-for', 'jump-release'], check=True)\n")
+        config = Path(__file__).resolve().parents[1] / "tmux.conf"
+        bindings = [line for line in config.read_text().splitlines()
+                    if line.startswith("bind -T copy-mode-vi") and "@pi-nav-busy" in line]
+        self.assertEqual(len(bindings), 4)
+        binding_file = self.directory / "bindings.conf"
+        binding_file.write_text("\n".join(
+            line.replace("~/.config/tmux/scripts/jump-pi-anchor.py", str(stub))
+                .replace("@pi-nav-busy'", "@pi-nav-busy; tmux wait-for -S jump-finished'")
+            for line in bindings))
+        self.run_tmux("source-file", str(binding_file))
+        self.run_tmux("set-window-option", "mode-keys", "vi")
+        self.enter("relative")
+        self.run_tmux("send-keys", "-t", "%0", "[")
+        self.run_tmux("wait-for", "jump-started")
+        self.run_tmux("send-keys", "-t", "%0", *(["["] * 100))
+        self.assertEqual(log.read_text().splitlines(), ["%0 prompt prev"])
+        self.run_tmux("wait-for", "-S", "jump-release")
+        self.run_tmux("wait-for", "jump-finished")
+        self.assertEqual(self.run_tmux("show-options", "-pqv", "-t", "%0", "@pi-nav-busy"), "")
+        # Reverse immediately: no pending 100-helper backlog to drain.
+        self.run_tmux("send-keys", "-t", "%0", "]")
+        self.run_tmux("wait-for", "jump-started")
+        self.assertEqual(log.read_text().splitlines(), ["%0 prompt prev", "%0 prompt next"])
+        self.run_tmux("wait-for", "-S", "jump-release")
+        self.run_tmux("wait-for", "jump-finished")
+
+    def test_background_jump_aborts_if_cursor_moves(self):
+        self.enter("relative")
+        initial = nav.copy_state("%0")
+        moved = initial.copy()
+        moved[1] = str(int(moved[1]) - 1)
+        before = self.cursor_line()
+        with patch.object(nav, "copy_state", side_effect=[initial, moved]), patch.object(nav, "notify") as notify:
+            nav.jump("%0", "prompt", "prev")
+            notify.assert_not_called()
+        self.assertEqual(self.cursor_line(), before)
+
     def test_navigation_all_number_modes_and_frozen_output(self):
         for mode in ("off", "default", "absolute", "relative", "hybrid"):
             with self.subTest(mode=mode):
@@ -128,7 +205,7 @@ subprocess.run(["tmux", "wait-for", "finish"])
         self.run_tmux("resize-window", "-x", "40", "-y", "10")
         with patch.object(nav, "notify") as notify:
             nav.jump("%0", "prompt", "prev")
-            self.assertIn("snapshot changed", notify.call_args[0][1])
+            self.assertEqual("Re-enter copy mode", notify.call_args[0][1])
 
 
 if __name__ == "__main__":

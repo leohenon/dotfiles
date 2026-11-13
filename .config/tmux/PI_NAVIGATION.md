@@ -38,6 +38,12 @@ loaded, exit and enter copy mode again. A changed snapshot is rejected rather
 than navigated using potentially stale coordinates. Copy-mode refresh must be
 off. The keys do not wrap at the oldest/newest anchor or change search history.
 
+Navigation runs one background helper per pane. Repeats received while a jump
+is in progress are dropped rather than queued, so holding a key cannot build
+up a helper backlog. Boundary messages appear once for one second; tmux
+ignores keypresses during that brief notice. Successful navigation or a new
+copy-mode snapshot resets boundary notices.
+
 Validation:
 
 ```sh

@@ -30,6 +30,13 @@ def cache_path(pane):
     return root / f"{server}-{pane.lstrip('%')}.json"
 
 
+def save_cache(pane, data):
+    path = cache_path(pane)
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(data))
+    temporary.replace(path)
+
+
 def fingerprint(text):
     return hashlib.sha256(text.encode()).hexdigest()
 
@@ -66,9 +73,7 @@ def initialize(pane, optional=False):
     if ANSI.sub("", captured) != plain:
         return  # Resize or another mode transition: never guess coordinates.
     data = {"fingerprint": fingerprint(plain), "anchors": parse_anchors(captured)}
-    temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(data))
-    temporary.replace(path)
+    save_cache(pane, data)
 
 
 def target_row(anchors, kind, direction, cursor):
@@ -89,18 +94,25 @@ def move_commands(pane, row, history, limit):
 
 
 def notify(pane, message):
-    tmux("display-message", "-t", pane, message)
+    # -N discards keypresses during this brief notice rather than dismissing it.
+    tmux("display-message", "-N", "-d", "1000", "-t", pane, message)
+
+
+COPY_STATE = "#{pane_mode} #{copy_cursor_y} #{scroll_position} #{copy_position_limit} #{pane_height} #{refresh_active}"
+
+
+def copy_state(pane):
+    return tmux("display-message", "-p", "-t", pane, COPY_STATE).split()
 
 
 def jump(pane, kind, direction):
     if kind not in ("prompt", "diff") or direction not in ("prev", "next"):
         raise ValueError("invalid navigation type or direction")
-    state = tmux("display-message", "-p", "-t", pane,
-                 "#{pane_mode} #{copy_cursor_y} #{scroll_position} #{copy_position_limit} #{pane_height} #{refresh_active}").split()
+    state = copy_state(pane)
     if not state or state[0] != "copy-mode":
         return
     if len(state) > 5 and state[5] == "1":
-        notify(pane, "Pi jumps require frozen copy mode (disable refresh first)")
+        notify(pane, "Disable copy-mode refresh")
         return
     # Entry captures only bytes; defer Python indexing until navigation so
     # after-copy-mode cannot delay the caller's line-numbers-off command.
@@ -111,18 +123,29 @@ def jump(pane, kind, direction):
     except (FileNotFoundError, ValueError):
         data = {}
     if data.get("fingerprint") != fingerprint(plain):
-        notify(pane, "Pi navigation snapshot changed: exit copy mode and enter again")
+        notify(pane, "Re-enter copy mode")
         return
     cursor_y, scroll, limit, height = map(int, state[1:5])
     history = -int(plain.partition(" ")[0])
     if limit not in (history, history + height):
-        notify(pane, "Pi navigation: unsupported copy-mode coordinates")
+        notify(pane, "Unsupported copy mode")
         return
     row = target_row(data["anchors"], kind, direction, cursor_y - scroll)
+    # The helper runs in the background. Do not jump after the user moves,
+    # resizes, or exits copy mode while we read the snapshot.
+    if copy_state(pane) != state:
+        return
     if row is None:
-        notify(pane, f"No {direction} Pi {kind} anchor in this snapshot; /reload Pi for new anchors")
+        boundary = [kind, direction, cursor_y - scroll]
+        notified = data.setdefault("notified_boundaries", [])
+        if boundary not in notified:
+            notify(pane, f"No {direction} {kind}")
+            notified.append(boundary)
+            save_cache(pane, data)
         return
     tmux(*move_commands(pane, row, history, limit))
+    if data.pop("notified_boundaries", None):
+        save_cache(pane, data)
 
 
 if __name__ == "__main__":
