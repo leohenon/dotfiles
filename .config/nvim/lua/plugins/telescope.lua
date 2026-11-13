@@ -31,6 +31,25 @@ return {
       },
     },
     config = function()
+      local function open_commit_in_fugitive(prompt_bufnr)
+        local actions = require("telescope.actions")
+        local state = require("telescope.actions.state")
+        local selection = state.get_selected_entry()
+        local cwd = state.get_current_picker(prompt_bufnr).cwd or vim.fn.getcwd()
+        if not selection then
+          return
+        end
+        actions.close(prompt_bufnr)
+        require("lazy").load({ plugins = { "vim-fugitive" } })
+        local path = vim.fn.FugitiveFind(selection.value, vim.fn.FugitiveExtractGitDir(cwd))
+        vim.cmd.edit(vim.fn.fnameescape(path))
+      end
+
+      local function commit_mappings()
+        require("telescope.actions").select_default:replace(open_commit_in_fugitive)
+        return true
+      end
+
       pcall(function()
         require("telescope").setup({
           defaults = {
@@ -62,6 +81,7 @@ return {
             },
             git_commits = {
               layout_config = { prompt_position = "bottom" },
+              attach_mappings = commit_mappings,
             },
             live_grep = {
               theme = "ivy",
@@ -89,6 +109,7 @@ return {
               layout_config = { width = 0.60, height = 0.50 },
             },
             git_bcommits = {
+              attach_mappings = commit_mappings,
               layout_strategy = "horizontal",
               layout_config = { prompt_position = "bottom", width = 0.80, height = 0.70, preview_width = 0.60 },
             },

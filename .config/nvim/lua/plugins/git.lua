@@ -140,6 +140,41 @@ return {
 			{ "<leader>gs", "<cmd>botright Git<cr>", desc = "Source control (Fugitive)" },
 		},
 		config = function()
+			vim.api.nvim_create_user_command("Diff", function()
+				local object = vim.fn.FugitiveParse(vim.api.nvim_buf_get_name(0))[1]
+				if not object or not object:match("^%x+$") then
+					vim.notify(":Diff requires a Fugitive commit view", vim.log.levels.WARN)
+					return
+				end
+				local root = vim.fn.FugitiveWorkTree()
+				local result = vim.system({ "git", "-C", root, "rev-list", "--parents", "-n", "1", object }, { text = true }):wait()
+				if result.code ~= 0 then
+					vim.notify(result.stderr, vim.log.levels.ERROR)
+					return
+				end
+				local revisions = vim.split(vim.trim(result.stdout), "%s+")
+				local parent = revisions[2]
+				if not parent then
+					local empty = vim.system({ "git", "-C", root, "hash-object", "-t", "tree", "--stdin" }, { stdin = "", text = true }):wait()
+					if empty.code ~= 0 then
+						vim.notify(empty.stderr, vim.log.levels.ERROR)
+						return
+					end
+					parent = vim.trim(empty.stdout)
+				end
+				vim.cmd("CodeDiff --repo " .. vim.fn.fnameescape(root) .. " " .. parent .. " " .. revisions[1])
+			end, { desc = "Open the displayed Fugitive commit in CodeDiff" })
+
+			vim.keymap.set("ca", "d", function()
+				if vim.fn.getcmdtype() == ":" and vim.fn.getcmdline() == "d" then
+					local object = vim.fn.FugitiveParse(vim.api.nvim_buf_get_name(0))[1]
+					if object and object:match("^%x+$") then
+						return "Diff"
+					end
+				end
+				return "d"
+			end, { expr = true, desc = "Commit diff in Fugitive; delete elsewhere" })
+
 			local function highlights()
 				local groups = {
 					fugitiveHeader = { fg = "#A0A0A0", bold = true },
@@ -173,6 +208,10 @@ return {
 				vim.opt_local.wrap = false
 				vim.opt_local.spell = false
 				vim.opt_local.cursorline = vim.bo.filetype == "fugitive"
+				if vim.bo.filetype == "fugitive" then
+					-- Let section shortcuts place their heading at the very top.
+					vim.opt_local.scrolloff = 0
+				end
 				vim.opt_local.winhighlight:append({
 					diffAdded = "FugitiveDiffAdded",
 					diffRemoved = "FugitiveDiffRemoved",
@@ -185,6 +224,17 @@ return {
 				group = group,
 				pattern = "fugitive",
 				callback = function(event)
+					for key, section in pairs({ ["1"] = "Untracked", ["2"] = "Unstaged", ["3"] = "Staged", ["4"] = "Unpushed" }) do
+						vim.keymap.set("n", key, function()
+							for line, text in ipairs(vim.api.nvim_buf_get_lines(event.buf, 0, -1, false)) do
+								if text:match("^" .. section .. " ") then
+									vim.api.nvim_win_set_cursor(0, { line, 0 })
+									vim.cmd("normal! zt")
+									return
+								end
+							end
+						end, { buffer = event.buf, desc = "Jump to " .. section .. " section" })
+					end
 					for _, key in ipairs({ "<Tab>", "z" }) do
 						vim.keymap.set("n", key, "=", {
 							buffer = event.buf,
@@ -205,12 +255,91 @@ return {
 		end,
 	},
 	{
+		"rbong/vim-flog",
+		cmd = { "Flog", "Flogsplit", "Floggit" },
+		dependencies = { "tpope/vim-fugitive" },
+		keys = {
+			{ "<leader>l", "<cmd>Flog<cr>", desc = "Git: graph" },
+		},
+		init = function()
+			vim.g.flog_default_opts = {
+				all = false,
+				graph = false,
+				max_count = 500,
+				date = "relative",
+			}
+			local function flog_highlights()
+				vim.api.nvim_set_hl(0, "flogDate", { link = "Comment" })
+				vim.api.nvim_set_hl(0, "flogAuthor", { fg = "#FFCFA8" })
+			end
+			flog_highlights()
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				group = vim.api.nvim_create_augroup("FlogHighlights", { clear = true }),
+				callback = flog_highlights,
+			})
+			vim.api.nvim_create_autocmd("User", {
+				group = vim.api.nvim_create_augroup("FlogTotalCount", { clear = true }),
+				pattern = "FlogUpdate",
+				callback = function()
+					local buf = vim.api.nvim_get_current_buf()
+					local state = vim.fn["flog#state#GetBufState"]()
+					local max_count, skip = state.opts.max_count, state.opts.skip
+					state.opts.max_count, state.opts.skip = "", ""
+					vim.fn["flog#state#SetBufState"](state)
+					local ok, args = pcall(vim.fn["flog#floggraph#git#BuildLogArgs"])
+					state.opts.max_count, state.opts.skip = max_count, skip
+					vim.fn["flog#state#SetBufState"](state)
+					if not ok then
+						return
+					end
+					local cmd = table.concat(vim.fn["flog#git#GetCommand"]({ "log" }), " ")
+						.. args .. " --format=%H --no-patch -- "
+						.. vim.fn["flog#floggraph#git#BuildLogPaths"]()
+					local name = vim.api.nvim_buf_get_name(buf)
+					local request = (vim.b[buf].flog_count_request or 0) + 1
+					vim.b[buf].flog_count_request = request
+					vim.system({ "sh", "-c", cmd }, { cwd = state.workdir, text = true }, function(result)
+						vim.schedule(function()
+							if result.code ~= 0 or not vim.api.nvim_buf_is_valid(buf)
+								or vim.b[buf].flog_count_request ~= request then
+								return
+							end
+							local count = 0
+							for line in result.stdout:gmatch("[^\r\n]+") do
+								if line:match("^%x+$") then count = count + 1 end
+							end
+							local label = ("[total=%d]"):format(count)
+							local title, replaced = name:gsub("%[max_count=[^%]]+%]", label)
+							vim.api.nvim_buf_set_name(buf, replaced > 0 and title or (name .. " " .. label))
+						end)
+					end)
+				end,
+			})
+		end,
+	},
+	{
 		"esmuellert/codediff.nvim",
 		cmd = { "CodeDiff", "CodeDiffClose" },
 		keys = {
-			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Diff: open (unstaged)" },
+			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Diff: open status (staged and unstaged)" },
 			{ "<leader>dV", "<cmd>CodeDiff --staged<cr>", desc = "Diff: open (staged)" },
 			{ "<leader>dc", "<cmd>CodeDiffClose<cr>", desc = "Diff: close" },
+			{
+				"<leader>e",
+				function()
+					local lifecycle = require("codediff.ui.lifecycle")
+					local panel = lifecycle.get_panel_view(vim.api.nvim_get_current_tabpage())
+					if not panel then
+						return
+					end
+					local was_hidden = panel.is_hidden
+					require("codediff.ui.explorer").toggle_visibility(panel)
+					if was_hidden and panel.split and vim.api.nvim_win_is_valid(panel.split.winid) then
+						vim.api.nvim_set_current_win(panel.split.winid)
+					end
+				end,
+				desc = "Diff: toggle files panel (focus when opening)",
+			},
 			{ "<leader>df", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff: current file vs HEAD" },
 			{ "<leader>dF", "<cmd>CodeDiff history<cr>", desc = "Diff: repo history" },
 			{ "<leader>ch", "<cmd>CodeDiff history %<cr>", desc = "Diff: file history" },
@@ -224,37 +353,23 @@ return {
 			keymaps = {
 				view = {
 					quit = { "q", "<leader>dc" },
-					next_file = { "]f", "<Tab>" },
-					prev_file = { "[f", "<S-Tab>" },
-					toggle_explorer = "<leader>dt",
+					next_file = { "]f", "." },
+					prev_file = { "[f", "," },
+					toggle_explorer = false,
 					focus_explorer = "<leader>b",
 				},
 			},
 		},
 		config = function(_, opts)
 			require("codediff").setup(opts)
-			vim.api.nvim_create_autocmd("User", {
-				group = vim.api.nvim_create_augroup("CodeDiffExplorerToggle", { clear = true }),
-				pattern = "CodeDiffOpen",
-				callback = function(event)
-					local lifecycle = require("codediff.ui.lifecycle")
-					local tab = event.data.tabpage
-					if not lifecycle.get_panel_view(tab) then
-						return
-					end
-					lifecycle.set_tab_keymap(tab, "n", "<leader>e", function()
-						local panel = lifecycle.get_panel_view(tab)
-						if not panel then
-							return
-						end
-						local was_hidden = panel.is_hidden
-						require("codediff.ui.explorer").toggle_visibility(panel)
-						if was_hidden and panel.split and vim.api.nvim_win_is_valid(panel.split.winid) then
-							vim.api.nvim_set_current_win(panel.split.winid)
-						end
-					end, { desc = "Toggle files panel (focus when opening)" })
-				end,
-			})
+			-- Rewrite only an exact :q on Enter; leave :q!, :qa, and other commands alone.
+			vim.keymap.set("c", "<CR>", function()
+				if vim.fn.getcmdtype() == ":" and vim.trim(vim.fn.getcmdline()) == "q"
+					and require("codediff.ui.lifecycle").get_session(vim.api.nvim_get_current_tabpage()) then
+					return "<C-U>CodeDiffClose<CR>"
+				end
+				return "<CR>"
+			end, { expr = true, desc = "Close the whole CodeDiff tab with :q" })
 			vim.api.nvim_create_user_command("CodeDiffClose", function()
 				local lifecycle = require("codediff.ui.lifecycle")
 				local tab = vim.api.nvim_get_current_tabpage()
