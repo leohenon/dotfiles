@@ -1,8 +1,7 @@
 return {
 	{
 		"folke/which-key.nvim",
-		event = "VeryLazy",
-		cmd = { "WhichKeyEnable", "WhichKeyDisable", "WhichKeyToggle" },
+		cmd = { "WhichKey", "WhichKeyEnable", "WhichKeyDisable", "WhichKeyToggle" },
 		init = function()
 			vim.o.timeout = true
 			vim.o.timeoutlen = 300

@@ -297,6 +297,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
     local dir = normpath(vim.fn.fnamemodify(path, ":h"))
     local map = load_recent_map()
+    if map[dir] == path then
+      return
+    end
     map[dir] = path
     save_recent_map(map)
   end,

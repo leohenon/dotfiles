@@ -1,6 +1,28 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
+    event = "VeryLazy",
+    cmd = { "Telescope", "Fv" },
+    -- Lazy replays the first keypress after config installs the real mappings.
+    keys = {
+      { "<leader>ff", desc = "Telescope find files" },
+      { "<leader>fs", desc = "Telescope git status" },
+      { "<leader>ft", desc = "Telescope git files" },
+      { "<leader>fg", desc = "Telescope live grep" },
+      { "<leader>fd", desc = "Telescope find directories" },
+      { "<leader>fG", desc = "Telescope buffer grep" },
+      { "<leader>fw", desc = "Telescope find word under cursor" },
+      { "<leader>rr", desc = "Telescope references" },
+      { "<leader>rd", desc = "Telescope definitions" },
+      { "<leader>fb", desc = "Telescope buffers" },
+      { "<leader>fh", desc = "Telescope help tags" },
+      { "<leader>gw", desc = "Git: switch worktree" },
+      { "<leader>gb", desc = "Git: branches (fzf)" },
+      { "<leader>gB", desc = "Git: remote branches (fzf)" },
+      { "<leader>gc", desc = "Git: commits (repo)" },
+      { "<leader>gC", desc = "Git: commits (buffer)" },
+      { "<leader>fT", desc = "Telescope grep tracked files" },
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
       {
@@ -20,6 +42,8 @@ return {
           },
           pickers = {
             find_files = {
+              hidden = true,
+              file_ignore_patterns = { "%.git/" },
               theme = "dropdown",
               previewer = false,
               layout_config = { width = 0.60, height = 0.55 },

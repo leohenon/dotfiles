@@ -2,7 +2,26 @@ return {
   {
     "mg979/vim-visual-multi",
     branch = "master",
-    lazy = false,
+    cmd = { "VMTheme", "VMDebug", "VMClear", "VMLive", "VMRegisters", "VMSearch", "VMFromSearch" },
+    keys = {
+      { "<leader>mn", mode = { "n", "x" }, desc = "Multicursor: find under cursor" },
+      { "<leader>mA", desc = "Multicursor: select all" },
+      { "<leader>mj", desc = "Multicursor: add cursor down" },
+      { "<leader>mk", desc = "Multicursor: add cursor up" },
+      { "<leader>mm", desc = "Multicursor: add and free move" },
+      { "<leader>mt", desc = "Multicursor: resume mappings" },
+      { "<leader>mi", desc = "Multicursor: resume and insert" },
+      -- Preserve the plugin's other default entry points too.
+      { [[\\gS]], desc = "Multicursor: reselect last" },
+      { [[\\\]], desc = "Multicursor: add cursor at position" },
+      { [[\\/]], mode = { "n", "x" }, desc = "Multicursor: regex search" },
+      { "<S-Right>", desc = "Multicursor: select right" },
+      { "<S-Left>", desc = "Multicursor: select left" },
+      { [[\\A]], mode = "x", desc = "Multicursor: visual select all" },
+      { [[\\a]], mode = "x", desc = "Multicursor: visual add" },
+      { [[\\f]], mode = "x", desc = "Multicursor: visual find" },
+      { [[\\c]], mode = "x", desc = "Multicursor: visual cursors" },
+    },
     init = function()
       vim.g.VM_maps = {
         ["Find Under"] = "<leader>mn",
@@ -11,7 +30,8 @@ return {
         ["Add Cursor Down"] = "<leader>mj",
         ["Add Cursor Up"] = "<leader>mk",
       }
-
+    end,
+    config = function()
       local function add_cursor_and_free_move()
         vim.fn["vm#commands#add_cursor_at_pos"](0)
         if vim.fn.exists("b:VM_Selection") == 1 then

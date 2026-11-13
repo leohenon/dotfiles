@@ -1,6 +1,7 @@
 return {
   {
     "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog", "MasonUpdate" },
     build = ":MasonUpdate",
     config = function()
       require("mason").setup()
@@ -8,19 +9,14 @@ return {
   },
   {
     "williamboman/mason-lspconfig.nvim",
+    cmd = { "LspInstall", "LspUninstall" },
     dependencies = { "williamboman/mason.nvim" },
     config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "ts_ls",
-          "eslint",
-          "lua_ls",
-          "pyright",
-          "ruff",
-          "clangd",
-          "html",
-          "cssls",
-        },
+      local mason_lspconfig = require("mason-lspconfig")
+      local servers = { "ts_ls", "eslint", "lua_ls", "pyright", "ruff", "clangd", "html", "cssls" }
+      mason_lspconfig.setup({
+        -- Enable installed servers immediately; check for missing packages later.
+        ensure_installed = {},
         handlers = {
           function(server_name)
             local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -34,10 +30,30 @@ return {
           end,
         },
       })
+      vim.defer_fn(function()
+        -- Match Mason's normal behavior: don't install packages in headless runs.
+        if #vim.api.nvim_list_uis() == 0 then
+          return
+        end
+        local registry = require("mason-registry")
+        registry.refresh(vim.schedule_wrap(function()
+          local mappings = mason_lspconfig.get_mappings().lspconfig_to_package
+          for _, server in ipairs(servers) do
+            local ok, package = pcall(registry.get_package, mappings[server] or server)
+            if not ok then
+              vim.notify("Mason: package unavailable for " .. server, vim.log.levels.WARN)
+            elseif not package:is_installed() and not package:is_installing() then
+              package:install()
+            end
+          end
+        end))
+      end, 3000)
     end,
   },
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile", "FileType" },
+    cmd = { "LspInfo", "LspStart", "LspStop", "LspRestart" },
     dependencies = { "williamboman/mason-lspconfig.nvim" },
     config = function()
       vim.diagnostic.config({

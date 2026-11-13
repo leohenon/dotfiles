@@ -3,7 +3,17 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
-  event = "VeryLazy",
+  keys = {
+    { "<leader>h", desc = "Harpoon file" },
+    { "<leader>H", desc = "Harpoon quick menu" },
+    { "<C-h>", desc = "Harpoon select 1" },
+    { "<C-j>", desc = "Harpoon select 2" },
+    { "<C-k>", desc = "Harpoon select 3" },
+    { "<C-l>", desc = "Harpoon select 4" },
+    { "<leader><left>", desc = "Harpoon prev file" },
+    { "<leader><right>", desc = "Harpoon next file" },
+    { "<leader>ht", desc = "Harpoon terminal 1" },
+  },
   config = function()
     local ok, harpoon = pcall(require, "harpoon")
     if not ok then

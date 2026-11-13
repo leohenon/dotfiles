@@ -69,30 +69,6 @@ return {
 	},
 
 	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
-	},
-
-	{
-		"Isrothy/neominimap.nvim",
-		version = "*",
-		lazy = false,
-		keys = {
-			{ "<leader>wt", "<cmd>Neominimap Toggle<cr>", desc = "Minimap: toggle" },
-			{ "<leader>wf", "<cmd>Neominimap ToggleFocus<cr>", desc = "Minimap: toggle focus" },
-		},
-		init = function()
-			vim.opt.wrap = false
-			vim.opt.sidescrolloff = 36
-
-			vim.g.neominimap = {
-				auto_enable = false,
-			}
-		end,
-	},
-
-	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {

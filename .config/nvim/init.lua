@@ -71,21 +71,22 @@ vim.opt.guicursor = table.concat({
   "a:blinkon0",
 }, ",")
 
-local function theme_color(name, fallback)
+local function read_theme_palette()
   local ok, lines = pcall(vim.fn.readfile, vim.fn.expand("~/.config/vesper-variant.json"))
   if not ok or #lines == 0 then
-    return fallback
+    return {}
   end
 
   local decoded_ok, palette = pcall(vim.json.decode, table.concat(lines, "\n"))
-  if decoded_ok and type(palette) == "table" and type(palette[name]) == "string" then
-    return palette[name]
-  end
-
-  return fallback
+  return decoded_ok and type(palette) == "table" and palette or {}
 end
 
 local function apply_ui_hl()
+  -- Read once per refresh, but still pick up palette changes on FocusGained.
+  local palette = read_theme_palette()
+  local function theme_color(name, fallback)
+    return type(palette[name]) == "string" and palette[name] or fallback
+  end
   vim.api.nvim_set_hl(0, "Cursor", { reverse = true })
   vim.api.nvim_set_hl(0, "lCursor", { reverse = true })
   vim.api.nvim_set_hl(0, "TermCursor", { reverse = true })

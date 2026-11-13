@@ -1,6 +1,8 @@
 return {
   {
     "kawre/leetcode.nvim",
+    lazy = true,
+    cmd = { "Leet", "LeetClean" },
     build = ":TSUpdate html",
     dependencies = {
       "nvim-lua/plenary.nvim",
