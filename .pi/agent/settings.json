@@ -57,33 +57,15 @@
       ]
     },
     {
-      "source": "npm:pi-mux",
-      "extensions": [
-        "-src/index.ts"
-      ]
-    },
-    {
       "source": "git:github.com/leohenon/pi-stash",
       "extensions": [
         "+src/index.ts"
       ]
     },
     {
-      "source": "npm:pi-whisper",
-      "extensions": [
-        "-index.ts"
-      ]
-    },
-    {
       "source": "npm:pi-snake",
       "extensions": [
         "+extensions/pi-snake.ts"
-      ]
-    },
-    {
-      "source": "git:github.com/leohenon/personal-conventions",
-      "skills": [
-        "+skills/personal-conventions/SKILL.md"
       ]
     },
     {
@@ -105,14 +87,20 @@
       ]
     },
     "npm:pi-vim",
-    {
-      "source": "npm:@haispeed/pi-obsidian",
-      "extensions": [
-        "-extensions/obsidian-cli.ts"
-      ]
-    },
     "npm:pi-interactive-shell",
     "npm:pi-codex-image-gen",
+    {
+      "source": "npm:pi-lens",
+      "skills": [
+        "-skills/pi-lens-ast-grep/SKILL.md",
+        "-skills/pi-lens-lsp-navigation/SKILL.md",
+        "-skills/pi-lens-write-ast-grep-rule/SKILL.md",
+        "-skills/pi-lens-write-tree-sitter-rule/SKILL.md"
+      ],
+      "extensions": [
+        "-dist/index.js"
+      ]
+    },
     "npm:pi-diff",
     "../../dev/pi-copy-session-path"
   ],
