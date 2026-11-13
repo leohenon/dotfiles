@@ -92,13 +92,13 @@
     {
       "source": "npm:pi-lens",
       "skills": [
-        "-skills/pi-lens-ast-grep/SKILL.md",
-        "-skills/pi-lens-lsp-navigation/SKILL.md",
-        "-skills/pi-lens-write-ast-grep-rule/SKILL.md",
-        "-skills/pi-lens-write-tree-sitter-rule/SKILL.md"
+        "+skills/pi-lens-ast-grep/SKILL.md",
+        "+skills/pi-lens-lsp-navigation/SKILL.md",
+        "+skills/pi-lens-write-ast-grep-rule/SKILL.md",
+        "+skills/pi-lens-write-tree-sitter-rule/SKILL.md"
       ],
       "extensions": [
-        "-dist/index.js"
+        "+dist/index.js"
       ]
     },
     "npm:pi-diff",
