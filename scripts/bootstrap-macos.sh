@@ -81,11 +81,8 @@ if ! command -v pi >/dev/null 2>&1; then
 	npm install -g @mariozechner/pi-coding-agent
 fi
 
-if [[ -d "$repo_root/.pi/agent" ]]; then
-	mkdir -p "$HOME/.pi/agent"
-	rsync -a "$repo_root/.pi/agent/" "$HOME/.pi/agent/"
-	echo "Synced pi config -> $HOME/.pi/agent"
-fi
+# Pi package settings use explicit deployment paths; do not rsync the source tree.
+bash "$repo_root/scripts/install-pi-config.sh"
 
 if [[ ! -d "$HOME/.config/tmux/plugins/tpm" ]]; then
 	echo "Installing tmux plugin manager (tpm)..."

@@ -10,22 +10,18 @@ Personal macOS configuration.
 ├── hunk/
 ├── karabiner/
 ├── nvim/
-│   ├── after/
-│   │   ├── ftplugin/
-│   │   └── queries/
-│   └── lua/
-│       ├── config/
-│       └── plugins/
-├── raycast/
+│   ├── init.lua
+│   └── lua/plugins/
 ├── shell/
 ├── tmux/
 └── zsh/
 .pi/
 └── agent/
     ├── extensions/
-    └── themes/
-scripts/
-└── bootstrap-macos.sh
+    ├── models.json
+    └── settings.json
+Brewfile
+.gitconfig
 ```
 
-Restore: [`scripts/bootstrap-macos.sh`](scripts/bootstrap-macos.sh). (Replaces live configs)
+Restore: [`scripts/bootstrap-macos.sh`](scripts/bootstrap-macos.sh) (Replaces live configs)
