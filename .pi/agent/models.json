@@ -9,6 +9,17 @@
           "contextWindow": 1000000
         }
       }
+    },
+    "nvidia": {
+      "modelOverrides": {
+        "nvidia/nemotron-3.5-lightning-30b-a3b": {
+          "samplingParams": {
+            "chat_template_kwargs": {
+              "enable_thinking": false
+            }
+          }
+        }
+      }
     }
   }
 }

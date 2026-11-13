@@ -1,4 +1,6 @@
 {
-  "provider": "openai-codex",
-  "model": "gpt-6.1-sol"
+  "provider": "nvidia",
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+  "debounceSeconds": 300,
+  "showWidget": true
 }

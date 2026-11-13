@@ -71,7 +71,7 @@
     {
       "source": "npm:pi-session-summary",
       "extensions": [
-        "-index.ts"
+        "+index.ts"
       ]
     },
     {
