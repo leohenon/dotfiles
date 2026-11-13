@@ -1,9 +1,9 @@
 /**
  * Timestamps Extension for pi coding agent
  *
- * - Footer status: live elapsed timer during streaming
- * - Widget above editor disabled locally; my-pi-statusline renders the status
+ * - Widget above editor: live elapsed timer and final duration
  * - /timestamps command: interactive message timeline browser
+ * - /timestamps-toggle: show/hide start and end times alongside the timer
  *
  * Configure timezone via ~/.pi/agent/timestamps.json:
  *   { "timeZone": "America/Los_Angeles" }
@@ -13,9 +13,8 @@ import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-age
 import { matchesKey, Key, truncateToWidth } from "@mariozechner/pi-tui";
 
 const CONFIG_PATH = `${process.env.HOME}/.pi/agent/timestamps.json`;
-const SETTINGS_PATH = `${process.env.HOME}/.pi/agent/settings.json`;
 
-function loadConfig(): { timeZone?: string } {
+function loadConfig(): { timeZone?: string; showTimestamps?: boolean } {
   try {
     return JSON.parse(require("node:fs").readFileSync(CONFIG_PATH, "utf-8"));
   } catch {
@@ -39,40 +38,13 @@ function formatDuration(ms: number): string {
   return `${m}m ${rem.toFixed(0)}s`;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isMyStatuslineTimerEnabled(): boolean {
-  try {
-    const settings = JSON.parse(require("node:fs").readFileSync(SETTINGS_PATH, "utf-8"));
-    if (!isRecord(settings)) return false;
-
-    const packages = Array.isArray(settings.packages) ? settings.packages : [];
-    const hasMyStatusline = packages.some((pkg: unknown) => {
-      if (typeof pkg === "string") return pkg.includes("my-pi-statusline");
-      return isRecord(pkg) && typeof pkg.source === "string" && pkg.source.includes("my-pi-statusline");
-    });
-    if (!hasMyStatusline) return false;
-
-    const powerline = isRecord(settings.powerline) ? settings.powerline : null;
-    const customItems = Array.isArray(powerline?.customItems) ? powerline.customItems : [];
-    return customItems.some((item: unknown) => {
-      return isRecord(item) && (item.statusKey === "timestamps" || item.id === "timestamps");
-    });
-  } catch {
-    return false;
-  }
-}
-
 export default function (pi: ExtensionAPI) {
-  let promptTime: Date | null = null;
-  let responseTime: Date | null = null;
+  let showTimestamps = loadConfig().showTimestamps === true;
   let agentStartMs: number | null = null;
+  let agentEndMs: number | null = null;
+  let wasAborted = false;
   let timerInterval: ReturnType<typeof setInterval> | null = null;
   let lastCtx: ExtensionContext | null = null;
-  let spinnerIndex = 0;
-  const spinnerFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
   function clearTimer() {
     if (timerInterval) {
@@ -82,30 +54,19 @@ export default function (pi: ExtensionAPI) {
   }
 
   function updateWidget(ctx: ExtensionContext) {
-    if (!ctx.hasUI) return;
-
-    if (isMyStatuslineTimerEnabled()) {
-      // Widget intentionally disabled only when my-pi-statusline renders the
-      // same `timestamps` status via powerline.customItems.
-      ctx.ui.setWidget("timestamps", undefined);
-      return;
-    }
-
+    if (!ctx.hasUI || agentStartMs === null) return;
+    const elapsed = (agentEndMs ?? Date.now()) - agentStartMs;
     const theme = ctx.ui.theme;
-
-    if (!promptTime) {
-      ctx.ui.setWidget("timestamps", undefined);
-      return;
+    const icon = agentEndMs === null
+      ? theme.fg("accent", "Working ")
+      : wasAborted ? theme.fg("error", "✘ ") : theme.fg("success", "✓ ");
+    let line = icon + theme.fg("dim", formatDuration(elapsed));
+    if (showTimestamps) {
+      line += theme.fg("dim", `  ↑ ${formatTime(new Date(agentStartMs))}`);
+      if (agentEndMs !== null) {
+        line += theme.fg("dim", `  ↓ ${formatTime(new Date(agentEndMs))}`);
+      }
     }
-
-    let line = theme.fg("dim", "↑ ") + theme.fg("dim", formatTime(promptTime));
-
-    if (responseTime && agentStartMs) {
-      const duration = responseTime.getTime() - agentStartMs;
-      line += theme.fg("dim", "  ↓ ") + theme.fg("dim", formatTime(responseTime));
-      line += theme.fg("dim", "  ⏱ ") + theme.fg("dim", formatDuration(duration));
-    }
-
     ctx.ui.setWidget("timestamps", [line]);
   }
 
@@ -116,9 +77,10 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("before_agent_start", async (_event, ctx) => {
     hideBuiltInWorkingRow(ctx);
-    promptTime = new Date();
-    responseTime = null;
-    agentStartMs = promptTime.getTime();
+    agentStartMs = Date.now();
+    agentEndMs = null;
+    wasAborted = false;
+    if (ctx.hasUI) ctx.ui.setStatus("timestamps", undefined);
     lastCtx = ctx;
     updateWidget(ctx);
   });
@@ -127,14 +89,8 @@ export default function (pi: ExtensionAPI) {
     hideBuiltInWorkingRow(ctx);
     lastCtx = ctx;
     clearTimer();
-    spinnerIndex = 0;
     timerInterval = setInterval(() => {
-      if (!agentStartMs || !lastCtx) return;
-      const elapsed = Date.now() - agentStartMs;
-      const theme = lastCtx.ui.theme;
-      const frame = spinnerFrames[spinnerIndex % spinnerFrames.length] ?? "⠋";
-      spinnerIndex++;
-      lastCtx.ui.setStatus("timestamps", theme.fg("accent", frame) + theme.fg("dim", ` ${formatDuration(elapsed)}`));
+      if (lastCtx) updateWidget(lastCtx);
     }, 100);
   });
 
@@ -144,32 +100,28 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("agent_end", async (event, ctx) => {
     clearTimer();
-    responseTime = new Date();
-    if (agentStartMs) {
-      const total = Date.now() - agentStartMs;
-      const theme = ctx.ui.theme;
+    if (ctx.hasUI && agentStartMs !== null) {
+      agentEndMs = Date.now();
       const messages = Array.isArray((event as any).messages) ? (event as any).messages : [];
       const lastAssistant = [...messages].reverse().find((msg: any) => msg?.role === "assistant");
-      const wasAborted = lastAssistant?.stopReason === "aborted";
-      const icon = wasAborted ? theme.fg("error", "✘ ") : theme.fg("success", "✓ ");
-      ctx.ui.setStatus("timestamps", icon + theme.fg("dim", formatDuration(total)));
+      wasAborted = lastAssistant?.stopReason === "aborted";
+      updateWidget(ctx);
     }
-    updateWidget(ctx);
   });
 
   pi.on("session_start", async (_event, ctx) => {
     hideBuiltInWorkingRow(ctx);
-    promptTime = null;
-    responseTime = null;
     agentStartMs = null;
     lastCtx = ctx;
     clearTimer();
+    if (ctx.hasUI) {
+      ctx.ui.setWidget("timestamps", undefined);
+      ctx.ui.setStatus("timestamps", undefined);
+    }
   });
 
   pi.on("session_switch", async (_event, ctx) => {
     hideBuiltInWorkingRow(ctx);
-    promptTime = null;
-    responseTime = null;
     agentStartMs = null;
     clearTimer();
     ctx.ui.setWidget("timestamps", undefined);
@@ -178,6 +130,23 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_shutdown", async () => {
     clearTimer();
+  });
+
+  pi.registerCommand("timestamps-toggle", {
+    description: "Show or hide start/end timestamps alongside the timer",
+    handler: async (_args, ctx) => {
+      const enabled = !showTimestamps;
+      try {
+        const config = loadConfig();
+        require("node:fs").writeFileSync(CONFIG_PATH, JSON.stringify({ ...config, showTimestamps: enabled }, null, 2) + "\n");
+      } catch {
+        ctx.ui.notify("Could not save timestamp preference", "error");
+        return;
+      }
+      showTimestamps = enabled;
+      updateWidget(ctx);
+      ctx.ui.notify(`Timer timestamps ${enabled ? "shown" : "hidden"}`, "info");
+    },
   });
 
   // --- /timestamps command: interactive message timeline ---
