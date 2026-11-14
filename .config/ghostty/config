@@ -1,7 +1,3 @@
-
-# ==========================
-# Appearance
-# ==========================
 window-decoration = none
 macos-non-native-fullscreen = true
 window-padding-x = 0
@@ -9,81 +5,15 @@ window-padding-y = 0,0
 window-padding-balance = true
 window-padding-color = background
 font-family = "JetBrainsMono Nerd Font Mono"
-# font-family-bold = "JetBrainsMono Nerd Font"
-# font-family-italic = "JetBrainsMono Nerd Font"
-# font-family-bold-italic = "JetBrainsMono Nerd Font"
 font-size = 14
 adjust-cell-height = 0
 font-thicken = false
-# font-thicken-strength = 180
-
-# background-opacity = 0.95
-
-# Default selection colors (overridden by theme-switch.sh)
 selection-foreground = #FEFEFE
 selection-background = #1b1b1b
-# ==========================
-# Theme
-# ==========================
-
-# theme = "Catppuccin Mocha"
- # theme = "Catppuccin Macchiato"
-# theme = "Catppuccin Frappe"
 theme = "Vesper"
 cursor-text = #101010
 background = #101010
 background-opacity = 1
-# background = #282828
-# background-opacity = 1
-# background = 000000
-# background = #1F2430
-# background = #31394A
-# background-opacity = 0.8
-
-# Other themes
-# theme = "Raycast Dark"
-# theme = "Operator Mono Dark"
-# theme = "Relaxed"
-# theme = "Rose Pine"
-# theme = "Rouge 2"
-# theme = "Seti"
-# theme = "Sleepy Hollow"
-# theme = "Soft Server"
-# theme = "Tomorrow Night Burns"
-# theme = "Vesper"
-
-# ==========================
-# Theme presets
-# ==========================
-
-# Preset A: slightly dark, very readable
-# theme = "Adwaita Dark"
-# background-opacity = 1
-
-# Preset B: full dark background, high contrast
-# theme = "Atom One Dark"
-# background-opacity = 1
-
-# Preset C: true black background, professional (Nord)
-# theme = "Nord"
-# background = #000000
-# background-opacity = 1
-
-# Preset D: true black, very see-through
-# theme = "Nord"
-# background = #000000
-# background-opacity = 0.65
-# background-opacity-cells = true
-
-# ==========================
-# Keybindings
-# ==========================
-
-# Resize current split (macOS Option key)
-# keybind = alt+h=resize_split:left,25
-# keybind = alt+l=resize_split:right,25
-
-# Resize current split (Ctrl+Cmd+[ / ])
 keybind = ctrl+cmd+left_bracket=resize_split:left,25
 keybind = ctrl+cmd+right_bracket=resize_split:right,25
 foreground = #FEFEFE
