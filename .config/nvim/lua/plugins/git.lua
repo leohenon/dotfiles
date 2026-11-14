@@ -322,7 +322,6 @@ return {
 		cmd = { "CodeDiff", "CodeDiffClose" },
 		keys = {
 			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Diff: open status (staged and unstaged)" },
-			{ "<leader>dV", "<cmd>CodeDiff --staged<cr>", desc = "Diff: open (staged)" },
 			{ "<leader>dc", "<cmd>CodeDiffClose<cr>", desc = "Diff: close" },
 			{
 				"<leader>e",
@@ -362,6 +361,48 @@ return {
 		},
 		config = function(_, opts)
 			require("codediff").setup(opts)
+			local lifecycle = require("codediff.ui.lifecycle")
+			local function jump_to_group(name)
+				local tabpage = vim.api.nvim_get_current_tabpage()
+				if lifecycle.get_panel_name(tabpage) ~= "explorer" then return end
+				local panel = lifecycle.get_panel_view(tabpage)
+				if not panel or not panel.tree or not panel.split then return end
+				if panel.is_hidden then
+					require("codediff.ui.explorer").toggle_visibility(panel)
+				end
+				if not vim.api.nvim_win_is_valid(panel.split.winid) then return end
+				for _, node in ipairs(panel.tree:get_nodes()) do
+					if node.data.type == "group" and node.data.name == name then
+						node:expand()
+						panel.tree:render()
+						vim.api.nvim_set_current_win(panel.split.winid)
+						vim.wo.scrolloff = 0
+						vim.api.nvim_win_set_cursor(0, { node._line, 0 })
+						vim.cmd("normal! zt")
+						return
+					end
+				end
+			end
+			local function bind_sections()
+				local tabpage = vim.api.nvim_get_current_tabpage()
+				vim.schedule(function()
+					if vim.api.nvim_get_current_tabpage() ~= tabpage
+						or lifecycle.get_panel_name(tabpage) ~= "explorer" then return end
+					for key, name in pairs({ ["1"] = "unstaged", ["2"] = "staged" }) do
+						-- Let CodeDiff own and restore these mappings on session close.
+						lifecycle.set_tab_keymap(tabpage, "n", key, function()
+							jump_to_group(name)
+						end, { desc = "Diff: focus " .. name .. " section" })
+					end
+				end)
+			end
+			local section_group = vim.api.nvim_create_augroup("CodeDiffSections", { clear = true })
+			vim.api.nvim_create_autocmd("User", {
+				group = section_group,
+				pattern = { "CodeDiffOpen", "CodeDiffFileSelect" },
+				callback = bind_sections,
+			})
+			vim.api.nvim_create_autocmd("BufEnter", { group = section_group, callback = bind_sections })
 			-- Rewrite only an exact :q on Enter; leave :q!, :qa, and other commands alone.
 			vim.keymap.set("c", "<CR>", function()
 				if vim.fn.getcmdtype() == ":" and vim.trim(vim.fn.getcmdline()) == "q"
