@@ -1,4 +1,6 @@
-# π
+# [π](https://github.com/earendil-works/pi)
+
+Config: `.pi/agent/settings.json`.
 
 - [Settings and packages](agent/settings.json)
 - [Model overrides](agent/models.json)

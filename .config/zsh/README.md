@@ -1,3 +1,3 @@
-# Zsh
+# [Zsh](https://github.com/zsh-users/zsh)
 
-`.config/zsh/.zshrc` → `~/.zshrc`
+Config: `.config/zsh/.zshrc` → `~/.zshrc`.

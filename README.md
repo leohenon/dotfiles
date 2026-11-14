@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal macOS configuration ([nvim](.config/nvim/README.md) · [tmux](.config/tmux/README.md) · [fish](.config/fish/README.md) · [π](.pi/README.md) · [Ghostty](.config/ghostty/README.md) )
+Personal macOS configuration ([nvim](.config/nvim/README.md) · [tmux](.config/tmux/README.md) · [fish](.config/fish/README.md) · [π](.pi/README.md) · [ghostty](.config/ghostty/README.md) · [opengh](.config/opengh/README.md) )
 
 ```text
 .config/
@@ -12,6 +12,7 @@ Personal macOS configuration ([nvim](.config/nvim/README.md) · [tmux](.config/t
 ├── nvim/
 │   ├── init.lua
 │   └── lua/plugins/
+├── opengh/
 ├── shell/
 ├── tmux/
 └── zsh/

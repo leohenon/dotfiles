@@ -1,3 +1,3 @@
-# Ghostty
+# [Ghostty](https://github.com/ghostty-org/ghostty)
 
-`.config/ghostty/config`
+Config: `.config/ghostty/config`.

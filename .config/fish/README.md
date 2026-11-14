@@ -1,5 +1,5 @@
-# Fish
+# [Fish shell](https://github.com/fish-shell/fish-shell)
 
-`.config/fish/config.fish`
+Config: `.config/fish/config.fish`.
 
 Functions: `.config/fish/functions/`

@@ -1,5 +1,5 @@
-# tmux
+# [tmux](https://github.com/tmux/tmux)
 
-`.config/tmux/tmux.conf`
+Config: `.config/tmux/tmux.conf`.
 
 Scripts: `.config/tmux/scripts/`

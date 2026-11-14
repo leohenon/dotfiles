@@ -1,4 +1,6 @@
-# Neovim
+# [Neovim](https://github.com/neovim/neovim)
+
+Config: `.config/nvim/init.lua`.
 
 A fast, streamlined nvim config ([init.lua](init.lua), [Plugins](lua/plugins/)).
 

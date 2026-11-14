@@ -1,0 +1,18 @@
+{
+  "showScrollbars": false,
+  "theme": "vesper",
+  "colorMode": "system",
+  "reducedMotion": false,
+  "markdownStyle": "rich",
+  "detailLayout": "centered",
+  "detailsPlacement": "auto",
+  "diffLayout": "auto",
+  "diffWrap": true,
+  "diffFullscreen": true,
+  "showStatusBarHints": false,
+  "iconStyle": "nerd",
+  "compactHeader": true,
+  "hideDocumentsTab": true,
+  "showTabShortcuts": true,
+  "showTabCounts": true
+}
